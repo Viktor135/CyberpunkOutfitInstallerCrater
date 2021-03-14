@@ -10,6 +10,10 @@ public class FileSystemItemBuilder extends SubBuilder<PluginBuilder, FileSystemI
 
    private final FileSystemItem item;
 
+   public static FileSystemItemBuilder builder(){
+       return new FileSystemItemBuilder(null);
+   }
+
     protected FileSystemItemBuilder(final PluginBuilder parent) {
         super(parent);
         item = new FileSystemItem();

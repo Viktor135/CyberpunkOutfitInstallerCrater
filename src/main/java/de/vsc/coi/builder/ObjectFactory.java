@@ -5,8 +5,8 @@ import static fomod.OrderEnum.EXPLICIT;
 
 import javax.xml.bind.JAXBElement;
 
-import de.vsc.coi.Config;
 import fomod.CompositeDependency;
+import fomod.FileDependency;
 import fomod.FlagDependency;
 import fomod.GroupList;
 import fomod.Image;
@@ -25,15 +25,26 @@ public class ObjectFactory extends fomod.ObjectFactory {
         return list;
     }
 
-    public FlagDependency createFlag(final String flag) {
+    public FlagDependency createFlagDependency(final String flag) {
         final FlagDependency flagDependency = super.createFlagDependency();
         flagDependency.setFlag(flag);
         flagDependency.setValue(config().getFlagDependencyValue());
         return flagDependency;
     }
 
-    public JAXBElement<FlagDependency> createCDFlagOn(final String flag) {
-        return super.createCompositeDependencyFlagDependency(createFlag(flag));
+    public JAXBElement<FlagDependency> createCDFlag(final String flag) {
+        return super.createCompositeDependencyFlagDependency(createFlagDependency(flag));
+    }
+
+    public JAXBElement<FileDependency> createCDFile(final String file,final FileDependencyState state) {
+        return super.createCompositeDependencyFileDependency(createFileDependency(file,state));
+    }
+
+    public FileDependency createFileDependency(final String file,final FileDependencyState state) {
+        final FileDependency fileDependency = super.createFileDependency();
+        fileDependency.setFile(file);
+        fileDependency.setState(state.getValue());
+        return fileDependency;
     }
 
     public CompositeDependency createAndDependency() {

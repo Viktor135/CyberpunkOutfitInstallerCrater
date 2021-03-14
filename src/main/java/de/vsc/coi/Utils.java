@@ -1,7 +1,6 @@
 package de.vsc.coi;
 
 import static de.vsc.coi.Config.config;
-import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.endsWithIgnoreCase;
@@ -27,6 +26,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.common.base.Charsets;
 
 public class Utils {
 
@@ -66,9 +67,9 @@ public class Utils {
 
     public static List<String> readFile(final File file) {
         try {
-            return FileUtils.readLines(file, defaultCharset());
+            return FileUtils.readLines(file, Charsets.UTF_8);
         } catch (final IOException e) {
-            LOGGER.error("Can not read file {}", file.getPath(), e);
+            LOGGER.error("Can not read file '{}'", file.getPath(), e);
         }
         return emptyList();
     }

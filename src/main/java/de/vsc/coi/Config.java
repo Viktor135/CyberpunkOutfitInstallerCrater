@@ -72,6 +72,11 @@ public class Config {
     @PropertyValue("flagDependencyValue")
     private String flagDependencyValue;
 
+    @NotBlank
+    @DefaultValue("replaces - ")
+    @PropertyValue("replacesItemMarkerFilePrefix")
+    private String replacesItemMarkerFilePrefix;
+
     private Config() {
     }
 

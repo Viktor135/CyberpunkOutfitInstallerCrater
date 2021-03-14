@@ -70,7 +70,7 @@ public class FileCrawler {
 
         public void addFlagDependencyIfPresent(final InstallStepBuilder builder) {
             if (conditionFlag != null) {
-                LOGGER.info("Adding Flag dependency to " + conditionFlag);
+                LOGGER.info("Adding Flag dependency to '{}'", conditionFlag);
                 builder.addFlagDependency(conditionFlag);
             }
         }

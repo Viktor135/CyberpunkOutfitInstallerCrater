@@ -21,12 +21,12 @@ public class SelectDirectoryCrawler extends DirectoryCrawler {
     }
 
     @Override
-    public List<File> getChildren(final File parent) {
+    protected List<File> getChildren(final File parent) {
         return childDirectories(parent);
     }
 
     @Override
-    public void postProcessPlugin(final PluginBuilder builder, final File child) {
+    protected void postProcessPlugin(final PluginBuilder builder, final File child) {
         final String flag = getUniqueFlag(child);
         builder.addConditionFlag(flag);
         addWork(child, flag);

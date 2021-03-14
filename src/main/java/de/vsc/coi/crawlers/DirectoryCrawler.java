@@ -51,13 +51,13 @@ public abstract class DirectoryCrawler {
     }
 
     public Optional<InstallStepBuilder> createStep(final File dir) {
-        logger().info("Starting to crawl {}", dir.getPath());
+        logger().info("Starting to crawl: '{}'", Workspace.relativize(dir));
         final List<File> children = getChildren(dir);
         if (children.isEmpty()) {
             logger().info("No suitable files found in the directory.");
             return Optional.empty();
         }
-        logger().info("Suitable files found: {}",
+        logger().info("Suitable files found: '{}'",
                 children.stream().map(File::getName).collect(Collectors.joining(",")));
         final String fileName = formatName(dir);
         final Optional<String> commonImage = getImageFromDir(dir, config().getCommonImageName());
@@ -69,7 +69,7 @@ public abstract class DirectoryCrawler {
                 .name(fileName);
         for (final File child : children) {
             final String pluginName = formatName(child);
-            logger().info("Adding new plugin: {}", pluginName);
+            logger().info("Adding new plugin: '{}'", pluginName);
             final PluginBuilder pluginBuilder = groupBuilder.newPlugin()
                     .name(pluginName)
                     .description(stepDescription)
@@ -77,15 +77,15 @@ public abstract class DirectoryCrawler {
                     .setImageIfNotPresent(commonImage);
             postProcessPlugin(pluginBuilder, child);
         }
-        logger().info("Adding new step: {}", fileName);
+        logger().info("Adding new step: '{}'", fileName);
         return Optional.of(groupBuilder.parent());
     }
 
-    public abstract List<File> getChildren(final File parent);
+    protected abstract List<File> getChildren(final File parent);
 
-    public abstract void postProcessPlugin(final PluginBuilder builder, final File child);
+    protected abstract void postProcessPlugin(final PluginBuilder builder, final File child);
 
-    public void addWork(final File file, final String flag) {
+    protected void addWork(final File file, final String flag) {
         workQueue.add(new Work(file, flag));
     }
 

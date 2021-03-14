@@ -43,4 +43,8 @@ public class Workspace {
         return workspaceDir.getName();
     }
 
+    public static String modName() {
+        return name();
+    }
+
 }
