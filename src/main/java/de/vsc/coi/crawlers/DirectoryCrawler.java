@@ -1,5 +1,6 @@
 package de.vsc.coi.crawlers;
 
+import static de.vsc.coi.Config.config;
 import static de.vsc.coi.Utils.formatName;
 
 import java.io.File;
@@ -59,7 +60,7 @@ public abstract class DirectoryCrawler {
         logger().info("Suitable files found: {}",
                 children.stream().map(File::getName).collect(Collectors.joining(",")));
         final String fileName = formatName(dir);
-        final Optional<String> commonImage = getImageFromDir(dir, Config.instance().getCommonImageName());
+        final Optional<String> commonImage = getImageFromDir(dir, config().getCommonImageName());
         final String stepDescription = Utils.getDescription(dir);
         final GroupBuilder groupBuilder = InstallStepBuilder.builder()
                 .name(fileName)

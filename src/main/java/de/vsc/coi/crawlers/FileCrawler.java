@@ -1,5 +1,6 @@
 package de.vsc.coi.crawlers;
 
+import static de.vsc.coi.Config.config;
 import static de.vsc.coi.crawlers.DirectoryCrawler.getImageFromDir;
 
 import java.io.File;
@@ -12,7 +13,6 @@ import java.util.Queue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.vsc.coi.Config;
 import de.vsc.coi.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.ModuleConfigurationBuilder;
@@ -45,7 +45,7 @@ public class FileCrawler {
         }
         LOGGER.info("Crawling finished.");
         return configurationBuilder.name(Workspace.name())
-                .image(getImageFromDir(Workspace.dir(), Config.instance().getModuleImageName()));
+                .image(getImageFromDir(Workspace.dir(), config().getModuleImageName()));
     }
 
     private void crawl(final Work work) {

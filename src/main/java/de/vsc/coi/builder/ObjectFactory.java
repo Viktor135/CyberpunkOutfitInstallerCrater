@@ -1,15 +1,15 @@
 package de.vsc.coi.builder;
 
+import static de.vsc.coi.Config.config;
 import static fomod.OrderEnum.EXPLICIT;
 
 import javax.xml.bind.JAXBElement;
 
+import de.vsc.coi.Config;
 import fomod.CompositeDependency;
-import fomod.FileSystemItem;
 import fomod.FlagDependency;
 import fomod.GroupList;
 import fomod.Image;
-import fomod.OrderEnum;
 import fomod.PluginList;
 import fomod.SetConditionFlag;
 import fomod.StepList;
@@ -25,15 +25,15 @@ public class ObjectFactory extends fomod.ObjectFactory {
         return list;
     }
 
-    public FlagDependency createFlagOn(final String flag) {
+    public FlagDependency createFlag(final String flag) {
         final FlagDependency flagDependency = super.createFlagDependency();
         flagDependency.setFlag(flag);
-        flagDependency.setValue("ON");
+        flagDependency.setValue(config().getFlagDependencyValue());
         return flagDependency;
     }
 
     public JAXBElement<FlagDependency> createCDFlagOn(final String flag) {
-        return super.createCompositeDependencyFlagDependency(createFlagOn(flag));
+        return super.createCompositeDependencyFlagDependency(createFlag(flag));
     }
 
     public CompositeDependency createAndDependency() {

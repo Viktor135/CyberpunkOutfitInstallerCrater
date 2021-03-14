@@ -1,5 +1,7 @@
 package de.vsc.coi;
 
+import static de.vsc.coi.builder.ObjectFactory.FACTORY;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -10,6 +12,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.crawlers.FileCrawler;
 
 public class Application {

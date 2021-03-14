@@ -52,7 +52,7 @@ class ConfigTest {
 
     @Test
     void should_throw_if_not_initialised() {
-        assertThrows(IllegalStateException.class, Config::instance);
+        assertThrows(IllegalStateException.class, Config::config);
     }
 
 }

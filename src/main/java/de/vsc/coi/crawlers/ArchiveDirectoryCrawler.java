@@ -1,5 +1,6 @@
 package de.vsc.coi.crawlers;
 
+import static de.vsc.coi.Config.config;
 import static de.vsc.coi.Utils.nameEndsWith;
 import static java.util.stream.Collectors.toList;
 
@@ -24,13 +25,13 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
     }
 
     public static String gameArchiveFolder(final File file) {
-        return Config.instance().getModFileDir() + file.getName();
+        return config().getModFileDir() + file.getName();
     }
 
     @Override
     public List<File> getChildren(final File parent) {
         return Utils.streamChildren(parent)
-                .filter(x -> nameEndsWith(x, Config.instance().getModFileEnding()))
+                .filter(x -> nameEndsWith(x, config().getModFileEnding()))
                 .collect(toList());
     }
 

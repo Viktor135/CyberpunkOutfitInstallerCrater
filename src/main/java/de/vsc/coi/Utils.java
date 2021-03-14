@@ -1,5 +1,6 @@
 package de.vsc.coi;
 
+import static de.vsc.coi.Config.config;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -57,7 +58,7 @@ public class Utils {
     }
 
     public static List<String> loadIgnores(final File dir) {
-        final List<String> ignore = new ArrayList<>(Config.instance().getDefaultIgnores());
+        final List<String> ignore = new ArrayList<>(config().getDefaultIgnores());
         stream(dir.listFiles(nameStartsWith("ignore"))).findFirst()
                 .ifPresent(ignoreFile -> ignore.addAll(readFile(ignoreFile)));
         return ignore;

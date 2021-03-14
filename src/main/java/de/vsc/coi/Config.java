@@ -67,10 +67,15 @@ public class Config {
     @CommandLineValue(shortOpt = "min", longOpt = "moduleImageName", hasArg = true)
     private String moduleImageName;
 
+    @NotBlank
+    @DefaultValue("ON")
+    @PropertyValue("flagDependencyValue")
+    private String flagDependencyValue;
+
     private Config() {
     }
 
-    public static Config instance() {
+    public static Config config() {
         if (config == null) {
             throw new IllegalStateException("The config has to be initialised before usage.");
         }

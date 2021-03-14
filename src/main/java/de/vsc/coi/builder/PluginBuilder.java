@@ -1,11 +1,13 @@
 package de.vsc.coi.builder;
 
+import static de.vsc.coi.Config.config;
 import static de.vsc.coi.builder.ObjectFactory.FACTORY;
 
 import java.util.Optional;
 
 import javax.xml.bind.JAXBElement;
 
+import de.vsc.coi.Config;
 import fomod.ConditionFlagList;
 import fomod.FileList;
 import fomod.FileSystemItem;
@@ -108,8 +110,8 @@ public class PluginBuilder extends SubBuilder<GroupBuilder, Plugin> {
         return this;
     }
 
-    public PluginBuilder addConditionFlagOn(final String name) {
-       return addConditionFlag(name,"ON");
+    public PluginBuilder addConditionFlag(final String name) {
+       return addConditionFlag(name, config().getFlagDependencyValue());
     }
 
     public PluginBuilder pluginType(final PluginTypeDescriptor type) {

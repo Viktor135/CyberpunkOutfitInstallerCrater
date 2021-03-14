@@ -28,7 +28,7 @@ public class SelectDirectoryCrawler extends DirectoryCrawler {
     @Override
     public void postProcessPlugin(final PluginBuilder builder, final File child) {
         final String flag = getUniqueFlag(child);
-        builder.addConditionFlagOn(flag);
+        builder.addConditionFlag(flag);
         addWork(child, flag);
     }
 
