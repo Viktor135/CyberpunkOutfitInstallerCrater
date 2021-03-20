@@ -14,12 +14,6 @@ import com.tngtech.configbuilder.exception.ValidatorException;
 class ConfigTest {
 
     @Test
-    void should_correctly_read_the_workspace_from_args() {
-        final String[] args = new String[] {"-w", "C:\\User\\Workspace"};
-        assertThat(Config.init(args).getWorkspacePath(), is("C:\\User\\Workspace"));
-    }
-
-    @Test
     void should_contain_the_defaults() {
         final Config expectedConfig = Config.builder()
                 .defaultIgnores(Set.of("fomod"))

@@ -1,10 +1,10 @@
 package de.vsc.coi;
 
+import static lombok.AccessLevel.PRIVATE;
+
 import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
-
-import org.apache.commons.lang3.StringUtils;
 
 import com.tngtech.configbuilder.ConfigBuilder;
 import com.tngtech.configbuilder.annotation.propertyloaderconfiguration.PropertiesFiles;
@@ -14,11 +14,11 @@ import com.tngtech.configbuilder.annotation.valueextractor.CommandLineValue;
 import com.tngtech.configbuilder.annotation.valueextractor.DefaultValue;
 import com.tngtech.configbuilder.annotation.valueextractor.PropertyValue;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -28,7 +28,8 @@ import lombok.ToString;
 @PropertyLocations(directories = "./")
 @Getter
 @Builder(builderClassName = "AppConfigBuilder")
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = PRIVATE)
+@NoArgsConstructor(access = PRIVATE)
 @EqualsAndHashCode
 @ToString
 @SuppressWarnings("unused")
@@ -39,9 +40,6 @@ public class Config {
     @PropertyValue("ignores")
     @DefaultValue("fomod")
     private Set<String> defaultIgnores;
-
-    @CommandLineValue(shortOpt = "w", longOpt = "workspace", hasArg = true)
-    private String workspacePath;
 
     @NotBlank
     @DefaultValue(".archive")
@@ -73,12 +71,9 @@ public class Config {
     private String flagDependencyValue;
 
     @NotBlank
-    @DefaultValue("replaces - ")
-    @PropertyValue("replacesItemMarkerFilePrefix")
-    private String replacesItemMarkerFilePrefix;
-
-    private Config() {
-    }
+    @DefaultValue("ignore")
+    @PropertyValue("ignoreFileName")
+    private String ignoreFileName;
 
     public static Config config() {
         if (config == null) {
@@ -94,11 +89,7 @@ public class Config {
 
     @Validation
     private void validate() {
-        if (workspacePath != null) {
-            if (StringUtils.isBlank(workspacePath)) {
-                throw new IllegalStateException("The configured workspace has to be not not blank.");
-            }
-        }
         defaultIgnores.add("fomod");
+        defaultIgnores.add(ignoreFileName);
     }
 }

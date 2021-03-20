@@ -1,6 +1,6 @@
 package de.vsc.coi.crawlers;
 
-import static de.vsc.coi.Utils.childDirectories;
+import static de.vsc.coi.utils.DirectoryUtils.childDirectories;
 
 import java.io.File;
 import java.util.List;

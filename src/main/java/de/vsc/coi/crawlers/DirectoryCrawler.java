@@ -1,7 +1,9 @@
 package de.vsc.coi.crawlers;
 
 import static de.vsc.coi.Config.config;
-import static de.vsc.coi.Utils.formatName;
+import static de.vsc.coi.utils.FileNameUtils.fileNameIs;
+import static de.vsc.coi.utils.FileNameUtils.formatName;
+import static de.vsc.coi.utils.Utils.toUniqueOptional;
 
 import java.io.File;
 import java.util.List;
@@ -11,14 +13,13 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 
-import de.vsc.coi.Config;
-import de.vsc.coi.Utils;
 import de.vsc.coi.Workspace;
 import de.vsc.coi.builder.GroupBuilder;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
 import de.vsc.coi.builder.SelectionMode;
 import de.vsc.coi.crawlers.FileCrawler.Work;
+import de.vsc.coi.utils.DirectoryUtils;
 
 public abstract class DirectoryCrawler {
 
@@ -34,19 +35,19 @@ public abstract class DirectoryCrawler {
     }
 
     public static Optional<String> getImageFromDir(final File dir, final String name) {
-        return Utils.streamChildImages(dir)
-                .filter(x -> Utils.fileNameStartsWith(x, name))
-                .findFirst()
+        return DirectoryUtils.streamChildImages(dir)
+                .filter(x -> fileNameIs(x, name))
+                .collect(toUniqueOptional("image with name: " + name, dir))
                 .map(Workspace::relativize);
     }
 
     public static SelectionMode selectionModeFor(final File dir) {
-        return Utils.streamChildren(dir)
+        return DirectoryUtils.streamChildren(dir)
                 .map(File::getName)
                 .map(SelectionMode::fromName)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .findFirst()
+                .collect(toUniqueOptional("SelectionMode file", dir))
                 .orElse(SelectionMode.DEFAULT);
     }
 
@@ -61,7 +62,7 @@ public abstract class DirectoryCrawler {
                 children.stream().map(File::getName).collect(Collectors.joining(",")));
         final String fileName = formatName(dir);
         final Optional<String> commonImage = getImageFromDir(dir, config().getCommonImageName());
-        final String stepDescription = Utils.getDescription(dir);
+        final String stepDescription = DirectoryUtils.getDescription(dir);
         final GroupBuilder groupBuilder = InstallStepBuilder.builder()
                 .name(fileName)
                 .newGroup()
@@ -70,6 +71,7 @@ public abstract class DirectoryCrawler {
         for (final File child : children) {
             final String pluginName = formatName(child);
             logger().info("Adding new plugin: '{}'", pluginName);
+
             final PluginBuilder pluginBuilder = groupBuilder.newPlugin()
                     .name(pluginName)
                     .description(stepDescription)

@@ -2,22 +2,38 @@ package de.vsc.coi;
 
 import java.io.File;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.assertj.core.util.VisibleForTesting;
+
+import com.tngtech.configbuilder.ConfigBuilder;
+import com.tngtech.configbuilder.annotation.validation.Validation;
+import com.tngtech.configbuilder.annotation.valueextractor.CommandLineValue;
+
+import de.vsc.coi.utils.DirectoryUtils;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 public class Workspace {
 
     private static final Logger LOGGER = LogManager.getLogger(Workspace.class);
 
-    private static Workspace instance;
     private static File workspaceDir;
 
-    private Workspace(final File workspaceDir) {
-        Workspace.workspaceDir = workspaceDir;
+    private Workspace() {
     }
 
+    @VisibleForTesting
     public static void init(final File workspace) {
-        instance = new Workspace(workspace);
+        workspaceDir = workspace;
+    }
+
+    public static void init(final String... args) {
+        Initializer.init(args);
     }
 
     public static File dir() {
@@ -29,13 +45,13 @@ public class Workspace {
     }
 
     public static boolean isInitialised() {
-        return instance != null;
+        return workspaceDir != null;
     }
 
     public static void checkIfInitialised() {
-        if (instance == null) {
-            LOGGER.error("The Relativizer is not initialised, but it should be.");
-            throw new IllegalStateException("The Relativizer is not initialised, but it should be.");
+        if (workspaceDir == null) {
+            LOGGER.error("The Workspace is not initialised, but it should be.");
+            throw new IllegalStateException("The Workspace is not initialised, but it should be.");
         }
     }
 
@@ -45,6 +61,50 @@ public class Workspace {
 
     public static String modName() {
         return name();
+    }
+
+    @EqualsAndHashCode
+    @ToString
+    @AllArgsConstructor(access = AccessLevel.PRIVATE)
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
+    private static class Initializer {
+
+        @CommandLineValue(shortOpt = "w", longOpt = "workspace", hasArg = true)
+        protected String workspacePath;
+
+        public static void init(final String... args) {
+            final Initializer initializer = ConfigBuilder.on(Initializer.class)
+                    .withCommandLineArgs(args)
+                    .build();
+
+            final File workspace;
+            if (initializer.workspacePath != null) {
+                workspace = new File(initializer.workspacePath);
+            } else {
+                final File selection = DirectoryUtils.chooseDirectory();
+                if (selection != null) {
+                    workspace = selection;
+                } else {
+                    throw new IllegalStateException("Canceled! No directory was chosen.");
+                }
+            }
+            LOGGER.info("Selected workspace: " + workspace.getPath());
+            if (!workspace.exists() || !workspace.isDirectory()) {
+                throw new IllegalStateException(
+                        "The workspace (" + workspace.getPath() + ") has to be an existing directory.");
+            }
+            Workspace.init(workspace);
+        }
+
+        @Validation
+        protected void validate() {
+            if (workspacePath != null) {
+                if (StringUtils.isBlank(workspacePath)) {
+                    throw new IllegalStateException("The configured workspace has to be not not blank.");
+                }
+            }
+        }
+
     }
 
 }

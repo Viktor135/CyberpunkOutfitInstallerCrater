@@ -1,0 +1,4 @@
+This file does nothing!
+It is only a marker, such that Vortex FOMOD (the mod installer) knows that the game item
+, specified by this files name, is replaced by some mod.
+This only works if the mod installer was created with CPMIC (see: ).

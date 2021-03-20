@@ -1,6 +1,6 @@
 package de.vsc.coi.builder;
 
-import static de.vsc.coi.Utils.getOrNew;
+import static de.vsc.coi.utils.Utils.getOrNew;
 import static de.vsc.coi.builder.ObjectFactory.FACTORY;
 import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 
