@@ -23,9 +23,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import de.vsc.coi.Config;
+import de.vsc.coi.config.Config;
 import de.vsc.coi.FileCreator;
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 
 class DirectoryUtilsIT {
 

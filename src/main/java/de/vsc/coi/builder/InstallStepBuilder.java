@@ -1,12 +1,13 @@
 package de.vsc.coi.builder;
 
-import static de.vsc.coi.utils.Utils.getOrNew;
 import static de.vsc.coi.builder.ObjectFactory.FACTORY;
+import static de.vsc.coi.utils.Utils.getOrNew;
 
 import java.util.Collection;
 
 import javax.xml.bind.JAXBElement;
 
+import fomod.CompositeDependency;
 import fomod.FileList;
 import fomod.Group;
 import fomod.InstallStep;
@@ -18,6 +19,7 @@ public class InstallStepBuilder extends SubBuilder<ModuleConfigurationBuilder, I
     private final InstallStep step;
 
     private final ModuleConfigurationBuilder parent;
+    private CompositeDependency dependencies;
 
     protected InstallStepBuilder(final ModuleConfigurationBuilder parent) {
         super(parent);
@@ -34,13 +36,19 @@ public class InstallStepBuilder extends SubBuilder<ModuleConfigurationBuilder, I
         return this;
     }
 
+    private void addDependency(final JAXBElement<?> toAdd) {
+        if (dependencies == null) {
+            dependencies = FACTORY.createAndDependency();
+            getOrNew(step::getVisible, step::setVisible,
+                    FACTORY::createAndDependency).getFileDependencyOrFlagDependencyOrGameDependency()
+                    .add(FACTORY.createCompositeDependencyDependencies(dependencies));
+        }
+        dependencies.getFileDependencyOrFlagDependencyOrGameDependency().add(toAdd);
+    }
+
     public InstallStepBuilder addFlagDependency(final String flag) {
         if (flag != null) {
-            //@formatter:off
-            getOrNew(step::getVisible, step::setVisible,FACTORY::createAndDependency)
-                    .getFileDependencyOrFlagDependencyOrGameDependency()
-                    .add(FACTORY.createCDFlag(flag));
-            //@formatter:on
+            addDependency(FACTORY.createCDFlag(flag));
         }
         return this;
     }
@@ -48,9 +56,7 @@ public class InstallStepBuilder extends SubBuilder<ModuleConfigurationBuilder, I
     public InstallStepBuilder addFileDependency(final String flag, final FileDependencyState state) {
         if (flag != null) {
             //@formatter:off
-            getOrNew(step::getVisible, step::setVisible,FACTORY::createAndDependency)
-                    .getFileDependencyOrFlagDependencyOrGameDependency()
-                    .add(FACTORY.createCDFile(flag,state));
+            addDependency(FACTORY.createCDFile(flag,state));
             //@formatter:on
         }
         return this;

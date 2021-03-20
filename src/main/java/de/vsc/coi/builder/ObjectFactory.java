@@ -1,6 +1,6 @@
 package de.vsc.coi.builder;
 
-import static de.vsc.coi.Config.config;
+import static de.vsc.coi.config.Config.config;
 import static fomod.OrderEnum.EXPLICIT;
 
 import javax.xml.bind.JAXBElement;
@@ -36,11 +36,11 @@ public class ObjectFactory extends fomod.ObjectFactory {
         return super.createCompositeDependencyFlagDependency(createFlagDependency(flag));
     }
 
-    public JAXBElement<FileDependency> createCDFile(final String file,final FileDependencyState state) {
-        return super.createCompositeDependencyFileDependency(createFileDependency(file,state));
+    public JAXBElement<FileDependency> createCDFile(final String file, final FileDependencyState state) {
+        return super.createCompositeDependencyFileDependency(createFileDependency(file, state));
     }
 
-    public FileDependency createFileDependency(final String file,final FileDependencyState state) {
+    public FileDependency createFileDependency(final String file, final FileDependencyState state) {
         final FileDependency fileDependency = super.createFileDependency();
         fileDependency.setFile(file);
         fileDependency.setState(state.getValue());
@@ -49,7 +49,7 @@ public class ObjectFactory extends fomod.ObjectFactory {
 
     public CompositeDependency createAndDependency() {
         final CompositeDependency dep = super.createCompositeDependency();
-        dep.setOperator("AND");
+        dep.setOperator("And");
         return dep;
     }
 

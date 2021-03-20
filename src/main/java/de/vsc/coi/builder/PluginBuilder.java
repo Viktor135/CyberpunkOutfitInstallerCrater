@@ -1,19 +1,20 @@
 package de.vsc.coi.builder;
 
-import static de.vsc.coi.Config.config;
+import static de.vsc.coi.config.Config.config;
 import static de.vsc.coi.builder.ObjectFactory.FACTORY;
 
 import java.util.Optional;
 
 import javax.xml.bind.JAXBElement;
 
-import de.vsc.coi.Config;
 import fomod.ConditionFlagList;
 import fomod.FileList;
 import fomod.FileSystemItem;
 import fomod.Image;
 import fomod.Plugin;
+import fomod.PluginType;
 import fomod.PluginTypeDescriptor;
+import fomod.PluginTypeEnum;
 
 public class PluginBuilder extends SubBuilder<GroupBuilder, Plugin> {
 
@@ -114,6 +115,14 @@ public class PluginBuilder extends SubBuilder<GroupBuilder, Plugin> {
        return addConditionFlag(name, config().getFlagDependencyValue());
     }
 
+    public PluginBuilder typeOptional(){
+        final PluginTypeDescriptor typeDescriptor = FACTORY.createPluginTypeDescriptor();
+        final PluginType type = FACTORY.createPluginType();
+        type.setName(PluginTypeEnum.OPTIONAL);
+        typeDescriptor.setType(type);
+        return pluginType(typeDescriptor);
+    }
+
     public PluginBuilder pluginType(final PluginTypeDescriptor type) {
         if (typeDescriptor == null) {
             typeDescriptor = FACTORY.createPluginTypeDescriptor(type);
@@ -124,4 +133,9 @@ public class PluginBuilder extends SubBuilder<GroupBuilder, Plugin> {
         return this;
     }
 
+    @Override
+    public Plugin build() {
+        typeOptional();
+        return super.build();
+    }
 }

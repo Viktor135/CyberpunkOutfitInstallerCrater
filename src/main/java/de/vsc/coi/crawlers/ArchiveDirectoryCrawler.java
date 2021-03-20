@@ -2,9 +2,9 @@ package de.vsc.coi.crawlers;
 
 import static de.vsc.coi.AutoInit.newAutoInit;
 import static de.vsc.coi.AutoInit.newResourceReader;
-import static de.vsc.coi.Config.config;
+import static de.vsc.coi.config.Config.config;
 import static de.vsc.coi.utils.FileNameUtils.nameEndsWith;
-import static de.vsc.coi.Workspace.relativize;
+import static de.vsc.coi.config.Workspace.relativize;
 import static de.vsc.coi.builder.FileDependencyState.MISSING;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -23,7 +23,7 @@ import org.apache.logging.log4j.Logger;
 import de.vsc.coi.AutoInit;
 import de.vsc.coi.utils.FIleReaderUtils;
 import de.vsc.coi.utils.DirectoryUtils;
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
 

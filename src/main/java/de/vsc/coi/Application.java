@@ -2,13 +2,17 @@ package de.vsc.coi;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.xml.sax.SAXException;
 
+import de.vsc.coi.config.Config;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.crawlers.FileCrawler;
 
 public class Application {
@@ -18,7 +22,7 @@ public class Application {
     public static void main(final String... args) {
         try {
             Config.init(args);
-            Workspace.init(args);
+            Workspace.init();
         } catch (final IllegalStateException e) {
             error(e.getMessage());
         }
@@ -39,7 +43,7 @@ public class Application {
             new FileCrawler().crawl().marshal(fomod);
             LOGGER.info("Process ended successfully!");
             JOptionPane.showMessageDialog(null, "Process ended successfully!");
-        } catch (final JAXBException | IOException e) {
+        } catch (final JAXBException | IOException | URISyntaxException | SAXException e) {
             LOGGER.error("While marshalling:", e);
             error("Process ended with Errors! For details view the log file.");
         }

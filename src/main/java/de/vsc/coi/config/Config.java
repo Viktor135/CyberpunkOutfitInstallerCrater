@@ -1,10 +1,13 @@
-package de.vsc.coi;
+package de.vsc.coi.config;
 
 import static lombok.AccessLevel.PRIVATE;
 
 import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
+
+import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.util.VisibleForTesting;
 
 import com.tngtech.configbuilder.ConfigBuilder;
 import com.tngtech.configbuilder.annotation.propertyloaderconfiguration.PropertiesFiles;
@@ -22,7 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * How it works? See: https://github.com/TNG/config-builder#how-to-import-an-existing-config
+ * How it works? See: https://github.com/TNG/config-builder
  */
 @PropertiesFiles("config")
 @PropertyLocations(directories = "./")
@@ -75,6 +78,9 @@ public class Config {
     @PropertyValue("ignoreFileName")
     private String ignoreFileName;
 
+    @CommandLineValue(shortOpt = "w", longOpt = "workspace", hasArg = true)
+    private String workspacePath;
+
     public static Config config() {
         if (config == null) {
             throw new IllegalStateException("The config has to be initialised before usage.");
@@ -82,14 +88,32 @@ public class Config {
         return config;
     }
 
+    @VisibleForTesting
+    protected static void clean(){
+        config = null;
+    }
+
     public static Config init(final String... args) {
         config = ConfigBuilder.on(Config.class).withCommandLineArgs(args).build();
         return config;
+    }
+
+    /**
+     * Should only be used in {@link Workspace}.
+     */
+    protected String getWorkspacePath() {
+        return workspacePath;
     }
 
     @Validation
     private void validate() {
         defaultIgnores.add("fomod");
         defaultIgnores.add(ignoreFileName);
+
+        if (workspacePath != null) {
+            if (StringUtils.isBlank(workspacePath)) {
+                throw new IllegalStateException("The configured workspace has to be not not blank.");
+            }
+        }
     }
 }

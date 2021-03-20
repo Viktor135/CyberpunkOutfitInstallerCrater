@@ -13,7 +13,7 @@ import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.FileSystemItemBuilder;
 import fomod.FileSystemItem;
 

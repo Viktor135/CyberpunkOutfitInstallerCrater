@@ -3,6 +3,7 @@ package de.vsc.coi.utils;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -10,7 +11,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)

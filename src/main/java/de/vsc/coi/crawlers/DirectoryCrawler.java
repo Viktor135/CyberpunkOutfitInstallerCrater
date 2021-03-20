@@ -1,6 +1,6 @@
 package de.vsc.coi.crawlers;
 
-import static de.vsc.coi.Config.config;
+import static de.vsc.coi.config.Config.config;
 import static de.vsc.coi.utils.FileNameUtils.fileNameIs;
 import static de.vsc.coi.utils.FileNameUtils.formatName;
 import static de.vsc.coi.utils.Utils.toUniqueOptional;
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.GroupBuilder;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
@@ -78,6 +78,7 @@ public abstract class DirectoryCrawler {
                     .setImageIfNotPresent(getImageFromDir(dir, child.getName()))
                     .setImageIfNotPresent(commonImage);
             postProcessPlugin(pluginBuilder, child);
+            pluginBuilder.build();
         }
         logger().info("Adding new step: '{}'", fileName);
         return Optional.of(groupBuilder.parent());

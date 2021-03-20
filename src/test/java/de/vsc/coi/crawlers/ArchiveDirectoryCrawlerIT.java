@@ -17,7 +17,6 @@ import static org.hamcrest.core.Is.is;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import de.vsc.coi.ArgumentCaptor;
-import de.vsc.coi.Config;
+import de.vsc.coi.config.Config;
 import de.vsc.coi.FileCreator;
-import de.vsc.coi.Workspace;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
 import fomod.FileList;
 import fomod.FileSystemItem;

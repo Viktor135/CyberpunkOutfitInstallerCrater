@@ -1,6 +1,6 @@
 package de.vsc.coi.utils;
 
-import static de.vsc.coi.Config.config;
+import static de.vsc.coi.config.Config.config;
 import static de.vsc.coi.utils.FileNameUtils.fileNameIs;
 import static de.vsc.coi.utils.FileNameUtils.nameIsNoneOf;
 import static de.vsc.coi.utils.Utils.toUniqueOptional;
