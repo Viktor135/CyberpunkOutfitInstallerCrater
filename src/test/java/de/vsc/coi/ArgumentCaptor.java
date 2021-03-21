@@ -21,23 +21,26 @@ public class ArgumentCaptor<T> extends BaseMatcher<T> {
         return captures;
     }
 
-    public T getLast(){
-        if(this.captures.isEmpty()){
+    public T getLast() {
+        if (this.captures.isEmpty()) {
             return null;
         }
-        return this.captures.get(this.captures.size()-1);
+        return this.captures.get(this.captures.size() - 1);
     }
+
     @Override
     public void describeTo(final Description description) {
 
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean matches(final Object actual) {
-        if (!forClass.isInstance(actual)) {
+        if (this.forClass.isInstance(actual)) {
+            captures.add((T) actual);
+            return true;
+        } else {
             return false;
         }
-        captures.add((T) actual);
-        return true;
     }
 }
