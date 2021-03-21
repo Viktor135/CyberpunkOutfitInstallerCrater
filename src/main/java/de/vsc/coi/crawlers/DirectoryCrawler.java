@@ -13,11 +13,11 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
 
-import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.GroupBuilder;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
 import de.vsc.coi.builder.SelectionMode;
+import de.vsc.coi.config.Workspace;
 import de.vsc.coi.crawlers.FileCrawler.Work;
 import de.vsc.coi.utils.DirectoryUtils;
 
@@ -63,25 +63,23 @@ public abstract class DirectoryCrawler {
         final String fileName = formatName(dir);
         final Optional<String> commonImage = getImageFromDir(dir, config().getCommonImageName());
         final String stepDescription = DirectoryUtils.getDescription(dir);
-        final GroupBuilder groupBuilder = InstallStepBuilder.builder()
-                .name(fileName)
-                .newGroup()
-                .type(selectionModeFor(dir))
-                .name(fileName);
+        final GroupBuilder groupBuilder = GroupBuilder.builder().type(selectionModeFor(dir)).name(fileName);
+
         for (final File child : children) {
             final String pluginName = formatName(child);
             logger().info("Adding new plugin: '{}'", pluginName);
 
-            final PluginBuilder pluginBuilder = groupBuilder.newPlugin()
+            final PluginBuilder pluginBuilder = PluginBuilder.builder()
                     .name(pluginName)
                     .description(stepDescription)
                     .setImageIfNotPresent(getImageFromDir(dir, child.getName()))
                     .setImageIfNotPresent(commonImage);
+
             postProcessPlugin(pluginBuilder, child);
-            pluginBuilder.build();
+            groupBuilder.addPlugin(pluginBuilder.build());
         }
         logger().info("Adding new step: '{}'", fileName);
-        return Optional.of(groupBuilder.parent());
+        return Optional.of(InstallStepBuilder.builder().name(fileName).addGroup(groupBuilder.build()));
     }
 
     protected abstract List<File> getChildren(final File parent);

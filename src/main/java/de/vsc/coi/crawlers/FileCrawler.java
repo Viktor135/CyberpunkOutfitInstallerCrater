@@ -13,10 +13,9 @@ import java.util.Queue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.ModuleConfigurationBuilder;
-import de.vsc.coi.builder.SubBuilder;
+import de.vsc.coi.config.Workspace;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -57,7 +56,7 @@ public class FileCrawler {
             step = step.or(() -> crawler.createStep(work.getDirectory()));
         }
         step.ifPresent(work::addFlagDependencyIfPresent);
-        step.map(SubBuilder::build).ifPresent(configurationBuilder::addStep);
+        step.map(InstallStepBuilder::build).ifPresent(configurationBuilder::addStep);
     }
 
     @Getter

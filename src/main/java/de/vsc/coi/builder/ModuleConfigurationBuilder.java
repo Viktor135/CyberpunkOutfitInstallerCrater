@@ -67,12 +67,6 @@ public class ModuleConfigurationBuilder {
         return this;
     }
 
-    public InstallStepBuilder newStep() {
-        final InstallStepBuilder builder = new InstallStepBuilder(this);
-        addStep(builder.getEntity());
-        return builder;
-    }
-
     public ModuleConfiguration build() {
         return moduleConfig;
     }

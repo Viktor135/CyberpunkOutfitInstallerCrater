@@ -2,10 +2,11 @@ package de.vsc.coi.crawlers;
 
 import static de.vsc.coi.AutoInit.newAutoInit;
 import static de.vsc.coi.AutoInit.newResourceReader;
-import static de.vsc.coi.config.Config.config;
-import static de.vsc.coi.utils.FileNameUtils.nameEndsWith;
-import static de.vsc.coi.config.Workspace.relativize;
 import static de.vsc.coi.builder.FileDependencyState.MISSING;
+import static de.vsc.coi.builder.FileSystemItemBuilder.newFileToCopy;
+import static de.vsc.coi.config.Config.config;
+import static de.vsc.coi.config.Workspace.relativize;
+import static de.vsc.coi.utils.FileNameUtils.nameEndsWith;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.writeLines;
@@ -21,11 +22,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.vsc.coi.AutoInit;
-import de.vsc.coi.utils.FIleReaderUtils;
-import de.vsc.coi.utils.DirectoryUtils;
-import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
+import de.vsc.coi.config.Workspace;
+import de.vsc.coi.utils.DirectoryUtils;
+import de.vsc.coi.utils.FIleReaderUtils;
 
 public class ArchiveDirectoryCrawler extends DirectoryCrawler {
 
@@ -54,13 +55,8 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
         if (step.isPresent() && !markerFiles.isEmpty()) {
             for (final File markerFile : markerFiles) {
                 LOGGER.info("Replacement marker found. Adding it to step dependency. '{}'", relativize(markerFile));
-                step.get()
-                        .addFileDependency(markerFile.getName(), MISSING)
-                        .newFileToCopy()
-                        .setPriority(0)
-                        .setSource(relativize(markerFile))
-                        .setDestination(gameArchiveFolder(markerFile))
-                        .build();
+                step.get().addFileDependency(markerFile.getName(), MISSING).addFileToCopy(newFileToCopy(markerFile));
+
                 if (FIleReaderUtils.readFile(markerFile).isEmpty()) {
                     writeReplacesItemMarkerFileContend(markerFile);
                 }
@@ -71,15 +67,14 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
 
     @Override
     protected List<File> getChildren(final File parent) {
-        return DirectoryUtils.streamChildren(parent).filter(x -> nameEndsWith(x, config().getModFileEnding())).collect(toList());
+        return DirectoryUtils.streamChildren(parent)
+                .filter(x -> nameEndsWith(x, config().getModFileEnding()))
+                .collect(toList());
     }
 
     @Override
     protected void postProcessPlugin(final PluginBuilder builder, final File child) {
-        builder.newFileSystemItem()
-                .setSource(relativize(child))
-                .setDestination(gameArchiveFolder(child))
-                .setPriority(0);
+        builder.addFile(newFileToCopy(child));
     }
 
     protected List<File> getReplacedItemMarker(final File dir) {
