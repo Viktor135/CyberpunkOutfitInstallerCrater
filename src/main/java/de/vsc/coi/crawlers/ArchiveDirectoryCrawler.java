@@ -39,8 +39,8 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
     });
     public static final AutoInit<List<String>> ITEM_CODES = newResourceReader("Console Item List/ItemListRAW.txt");
 
-    public ArchiveDirectoryCrawler(final Queue<FileCrawler.Work> workQueue) {
-        super(workQueue);
+    public ArchiveDirectoryCrawler() {
+        super();
     }
 
     public static String gameArchiveFolder(final File file) {
@@ -48,10 +48,10 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
     }
 
     @Override
-    public Optional<InstallStepBuilder> createStep(final File dir) {
-        final Optional<InstallStepBuilder> step = super.createStep(dir);
+    public Optional<InstallStepBuilder> createStep(final Work work) {
+        final Optional<InstallStepBuilder> step = super.createStep(work);
 
-        final List<File> markerFiles = getReplacedItemMarker(dir);
+        final List<File> markerFiles = getReplacedItemMarker(work.getDirectory());
         if (step.isPresent() && !markerFiles.isEmpty()) {
             for (final File markerFile : markerFiles) {
                 LOGGER.info("Replacement marker found. Adding it to step dependency. '{}'", relativize(markerFile));

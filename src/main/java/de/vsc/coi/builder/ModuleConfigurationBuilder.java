@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.xml.XMLConstants;
@@ -97,13 +98,14 @@ public class ModuleConfigurationBuilder {
 
         //Setup schema validator
         final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        final File schema = new File(
-                ModuleConfigurationBuilder.class.getClassLoader().getResource("fomod-schema/ModuleConfig.xsd").toURI());
+
+        final File schema = new File(Objects.requireNonNull(
+                ModuleConfigurationBuilder.class.getClassLoader().getResource("fomod-schema/ModuleConfig.xsd"))
+                .toURI());
         final Schema employeeSchema = sf.newSchema(schema);
         jaxbUnmarshaller.setSchema(employeeSchema);
 
         //Unmarshal xml file
-        final Object obj = jaxbUnmarshaller.unmarshal(outputFile);
-
+        jaxbUnmarshaller.unmarshal(outputFile);
     }
 }

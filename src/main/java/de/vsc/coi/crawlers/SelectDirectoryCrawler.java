@@ -10,14 +10,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.vsc.coi.builder.PluginBuilder;
-import de.vsc.coi.crawlers.FileCrawler.Work;
 
 public class SelectDirectoryCrawler extends DirectoryCrawler {
 
     private static final Logger LOGGER = LogManager.getLogger(SelectDirectoryCrawler.class);
 
-    public SelectDirectoryCrawler(final Queue<Work> workQueue) {
-        super(workQueue);
+    public SelectDirectoryCrawler() {
+        super();
     }
 
     @Override

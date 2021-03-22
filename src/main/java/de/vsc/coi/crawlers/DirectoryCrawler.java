@@ -4,11 +4,11 @@ import static de.vsc.coi.config.Config.config;
 import static de.vsc.coi.utils.FileNameUtils.fileNameIs;
 import static de.vsc.coi.utils.FileNameUtils.formatName;
 import static de.vsc.coi.utils.Utils.toUniqueOptional;
+import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.Logger;
@@ -18,16 +18,14 @@ import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
 import de.vsc.coi.builder.SelectionMode;
 import de.vsc.coi.config.Workspace;
-import de.vsc.coi.crawlers.FileCrawler.Work;
 import de.vsc.coi.utils.DirectoryUtils;
 
 public abstract class DirectoryCrawler {
 
     private static int id = 0;
-    protected final Queue<Work> workQueue;
+    private Work currentWork;
 
-    protected DirectoryCrawler(final Queue<Work> workQueue) {
-        this.workQueue = workQueue;
+    protected DirectoryCrawler() {
     }
 
     public static String getUniqueFlag(final File file) {
@@ -51,7 +49,9 @@ public abstract class DirectoryCrawler {
                 .orElse(SelectionMode.DEFAULT);
     }
 
-    public Optional<InstallStepBuilder> createStep(final File dir) {
+    public Optional<InstallStepBuilder> createStep(final Work work) {
+        this.currentWork = work;
+        final File dir = work.getDirectory();
         logger().info("Starting to crawl: '{}'", Workspace.relativize(dir));
         final List<File> children = getChildren(dir);
         if (children.isEmpty()) {
@@ -87,7 +87,7 @@ public abstract class DirectoryCrawler {
     protected abstract void postProcessPlugin(final PluginBuilder builder, final File child);
 
     protected void addWork(final File file, final String flag) {
-        workQueue.add(new Work(file, flag));
+        requireNonNull(currentWork).addWork(file, flag);
     }
 
     protected abstract Logger logger();

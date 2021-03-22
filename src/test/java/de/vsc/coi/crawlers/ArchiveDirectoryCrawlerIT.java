@@ -17,7 +17,6 @@ import static org.hamcrest.core.Is.is;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,10 +32,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import de.vsc.coi.ArgumentCaptor;
-import de.vsc.coi.config.Config;
 import de.vsc.coi.FileCreator;
-import de.vsc.coi.config.Workspace;
 import de.vsc.coi.builder.InstallStepBuilder;
+import de.vsc.coi.config.Config;
+import de.vsc.coi.config.Workspace;
 import fomod.FileList;
 import fomod.FileSystemItem;
 import fomod.Group;
@@ -78,8 +77,8 @@ class ArchiveDirectoryCrawlerIT {
         expectedDescription = "Some description!!";
         FileUtils.writeLines(desc, singleton(expectedDescription));
 
-        final Optional<InstallStepBuilder> optStep = new ArchiveDirectoryCrawler(new ArrayDeque<>()).createStep(
-                workspace);
+        final Optional<InstallStepBuilder> optStep = new ArchiveDirectoryCrawler().createStep(
+                new Work(workspace, null));
 
         assertThat(optStep.isPresent(), is(true));
         step = optStep.get().build();
@@ -186,7 +185,7 @@ class ArchiveDirectoryCrawlerIT {
     void should_write_info_to_markers() throws IOException {
         for (final File maker : makers) {
             final List<String> lines = FileUtils.readLines(maker, UTF_8);
-            assertThat(lines,is(hasSize(5)));
+            assertThat(lines, is(hasSize(5)));
         }
     }
 
