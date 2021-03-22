@@ -78,6 +78,10 @@ public class Config {
     @PropertyValue("ignoreFileName")
     private String ignoreFileName;
 
+    @CommandLineValue(shortOpt = "r", longOpt = "generateReport", hasArg = false)
+    @DefaultValue("false")
+    private boolean generateReport;
+
     @CommandLineValue(shortOpt = "w", longOpt = "workspace", hasArg = true)
     private String workspacePath;
 

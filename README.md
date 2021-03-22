@@ -1,3 +1,14 @@
+```
+      ::::::::       :::::::::       ::::::::       :::::::::::       :::::::: 
+    :+:    :+:      :+:    :+:     :+:    :+:          :+:          :+:    :+: 
+   +:+             +:+    +:+     +:+    +:+          +:+          +:+         
+  +#+             +#++:++#+      +#+    +:+          +#+          +#+          
+ +#+             +#+            +#+    +#+          +#+          +#+           
+#+#    #+#      #+#            #+#    #+#          #+#          #+#    #+#     
+########       ###             ########       ###########       ########       
+```
+
+
 # CyberpunkOutfitInstallerCrater (CpOIC)
 
 CpOIC is an easy-to-use tool to generate mod installers for (mainly) clothing mods for cyberpunk.

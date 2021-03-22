@@ -1,5 +1,7 @@
 package de.vsc.coi;
 
+import static de.vsc.coi.config.Config.config;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -60,6 +62,15 @@ public class Application {
             LOGGER.error("While validation:", e);
             return;
         }
+        if (config().isGenerateReport()) {
+            try {
+                LOGGER.info("Generating report...");
+                new Reporting().generateReport(marshaller.getOutputFile()).writeToFile();
+            } catch (final IOException e) {
+                LOGGER.error("While generating report.", e);
+            }
+        }
+
         LOGGER.info("Process ended successfully!");
     }
 

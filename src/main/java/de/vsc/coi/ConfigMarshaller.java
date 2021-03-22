@@ -85,4 +85,7 @@ public class ConfigMarshaller {
                 .toURI());
     }
 
+    public File getOutputFile() {
+        return outputFile;
+    }
 }
