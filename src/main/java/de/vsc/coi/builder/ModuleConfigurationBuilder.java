@@ -26,16 +26,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.xml.sax.SAXException;
 
+import de.vsc.coi.ConfigMarshaller;
 import fomod.InstallStep;
 import fomod.ModuleConfiguration;
 import fomod.StepList;
 
 public class ModuleConfigurationBuilder {
 
-    public static final String FILE_NAME = "ModuleConfig.xml";
-    private static final String configTagReplacement =
-            "<config xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-                    + "xsi:noNamespaceSchemaLocation=\"http://qconsulting.ca/fo3/ModConfig5.0.xsd\">";
+
     private final ModuleConfiguration moduleConfig;
 
     private ModuleConfigurationBuilder() {
@@ -70,42 +68,5 @@ public class ModuleConfigurationBuilder {
 
     public ModuleConfiguration build() {
         return moduleConfig;
-    }
-
-    public void marshal(final File outDir) throws JAXBException, IOException, URISyntaxException, SAXException {
-        final JAXBElement<ModuleConfiguration> config = FACTORY.createConfig(build());
-        final JAXBContext jaxbContext = JAXBContext.newInstance(ModuleConfiguration.class);
-        final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-        jaxbMarshaller.setProperty(JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final File outputFile = new File(outDir, FILE_NAME);
-        outputFile.createNewFile();
-        jaxbMarshaller.marshal(config, outputFile);
-
-        // Awful post processing...
-        final List<String> lines = readFile(outputFile);
-        boolean found = false;
-        for (int i = 0; !found && i < lines.size(); i++) {
-            if (containsIgnoreCase(lines.get(i), "<config>")) {
-                lines.set(i, StringUtils.replaceIgnoreCase(lines.get(i), "<config>", configTagReplacement));
-                found = true;
-            }
-        }
-        FileUtils.writeLines(outputFile, lines);
-
-        //Validation:
-        //Create Unmarshaller
-        final Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-        //Setup schema validator
-        final SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-
-        final File schema = new File(Objects.requireNonNull(
-                ModuleConfigurationBuilder.class.getClassLoader().getResource("fomod-schema/ModuleConfig.xsd"))
-                .toURI());
-        final Schema employeeSchema = sf.newSchema(schema);
-        jaxbUnmarshaller.setSchema(employeeSchema);
-
-        //Unmarshal xml file
-        jaxbUnmarshaller.unmarshal(outputFile);
     }
 }

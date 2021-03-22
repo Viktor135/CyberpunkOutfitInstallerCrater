@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.ModuleConfigurationBuilder;
 import de.vsc.coi.config.Workspace;
+import fomod.ModuleConfiguration;
 
 public class FileCrawler {
 
@@ -29,12 +30,13 @@ public class FileCrawler {
         crawlers.add(new SelectDirectoryCrawler());
     }
 
-    public ModuleConfigurationBuilder crawl() {
+    public ModuleConfiguration crawl() {
         LOGGER.info("Starting to crawl the workspace.");
         crawl(new Work(Workspace.dir(), null));// The top directory has no flag conditions.
         LOGGER.info("Crawling finished.");
         return configurationBuilder.name(Workspace.name())
-                .image(getImageFromDir(Workspace.dir(), config().getModuleImageName()));
+                .image(getImageFromDir(Workspace.dir(), config().getModuleImageName()))
+                .build();
     }
 
     private void crawl(final Work work) {

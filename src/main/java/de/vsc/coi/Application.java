@@ -14,6 +14,7 @@ import org.xml.sax.SAXException;
 import de.vsc.coi.config.Config;
 import de.vsc.coi.config.Workspace;
 import de.vsc.coi.crawlers.FileCrawler;
+import fomod.ModuleConfiguration;
 
 public class Application {
 
@@ -39,14 +40,27 @@ public class Application {
             error("The CPOIC have to have write access in the workspace!");
             return;
         }
+        final ModuleConfiguration configuration = new FileCrawler().crawl();
+        final ConfigMarshaller marshaller = new ConfigMarshaller(configuration, fomod);
         try {
-            new FileCrawler().crawl().marshal(fomod);
-            LOGGER.info("Process ended successfully!");
+            LOGGER.info("Marshalling...");
+            marshaller.marshal();
             JOptionPane.showMessageDialog(null, "Process ended successfully!");
-        } catch (final JAXBException | IOException | URISyntaxException | SAXException e) {
-            LOGGER.error("While marshalling:", e);
+        } catch (final JAXBException | IOException e) {
             error("Process ended with Errors! For details view the log file.");
+            LOGGER.error("While marshalling:", e);
+            return;
         }
+        try {
+            LOGGER.info("Validating...");
+            marshaller.validate();
+        } catch (final JAXBException | URISyntaxException | SAXException e) {
+            error("Validation of created Installer ended with errors! Most likely, this is an error in the CpOIC. "
+                    + "Pleas inform the mod author, then the bug will be fixed. For details view the log file.");
+            LOGGER.error("While validation:", e);
+            return;
+        }
+        LOGGER.info("Process ended successfully!");
     }
 
     public static void error(final String errorMessage) {
