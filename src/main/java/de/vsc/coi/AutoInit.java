@@ -1,6 +1,6 @@
 package de.vsc.coi;
 
-import static de.vsc.coi.utils.FIleReaderUtils.readLinesOfResource;
+import static de.vsc.coi.utils.FileReaderUtils.readLinesOfResource;
 
 import java.util.List;
 import java.util.function.Supplier;

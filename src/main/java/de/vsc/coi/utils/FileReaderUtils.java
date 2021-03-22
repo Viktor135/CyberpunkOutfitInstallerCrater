@@ -6,6 +6,7 @@ import static org.apache.commons.io.FileUtils.readLines;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -20,9 +21,9 @@ import de.vsc.coi.crawlers.ArchiveDirectoryCrawler;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
-public class FIleReaderUtils {
+public class FileReaderUtils {
 
-    private static final Logger LOGGER = LogManager.getLogger(FIleReaderUtils.class);
+    private static final Logger LOGGER = LogManager.getLogger(FileReaderUtils.class);
 
     public static List<String> readFile(final File file) {
         try {
@@ -35,12 +36,24 @@ public class FIleReaderUtils {
 
     public static List<String> readLinesOfResource(final String resourceName) {
         try {
-            final URL resource = ArchiveDirectoryCrawler.class.getClassLoader().getResource(resourceName);
-            Objects.requireNonNull(resource);
-            return readLines(new File(resource.toURI()), Charsets.UTF_8);
+            return readLines(resourceToFile(resourceName), Charsets.UTF_8);
         } catch (final URISyntaxException | IOException e) {
             LOGGER.error("Could not load class resource '{}'.", resourceName, e);
         }
         return null;
+    }
+
+    public static File resourceToFile(final String path) throws URISyntaxException {
+        return new File(resourceToUri(path));
+    }
+
+    public static URI resourceToUri(final String path) throws URISyntaxException {
+       return resourceToUrL(path).toURI();
+    }
+
+    public static URL resourceToUrL(final String path) throws URISyntaxException {
+        final URL resource = ArchiveDirectoryCrawler.class.getClassLoader().getResource(path);
+        Objects.requireNonNull(resource);
+        return resource;
     }
 }

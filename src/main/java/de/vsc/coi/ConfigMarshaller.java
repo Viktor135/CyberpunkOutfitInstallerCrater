@@ -1,7 +1,7 @@
 package de.vsc.coi;
 
 import static de.vsc.coi.builder.ObjectFactory.FACTORY;
-import static de.vsc.coi.utils.FIleReaderUtils.readFile;
+import static de.vsc.coi.utils.FileReaderUtils.readFile;
 import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 

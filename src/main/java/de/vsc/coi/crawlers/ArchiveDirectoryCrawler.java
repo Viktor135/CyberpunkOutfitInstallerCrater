@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Queue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,14 +25,14 @@ import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.PluginBuilder;
 import de.vsc.coi.config.Workspace;
 import de.vsc.coi.utils.DirectoryUtils;
-import de.vsc.coi.utils.FIleReaderUtils;
+import de.vsc.coi.utils.FileReaderUtils;
 
 public class ArchiveDirectoryCrawler extends DirectoryCrawler {
 
     private static final Logger LOGGER = LogManager.getLogger(ArchiveDirectoryCrawler.class);
 
     public static final AutoInit<List<String>> MARKER_FILE_INFO = newAutoInit(() -> {
-        final List<String> lines = FIleReaderUtils.readLinesOfResource("replacesItemMarkerFileInfo.txt");
+        final List<String> lines = FileReaderUtils.readLinesOfResource("replacesItemMarkerFileInfo.txt");
         requireNonNull(lines).add("The replacing mod is: " + Workspace.modName());
         return lines;
     });
@@ -57,7 +56,7 @@ public class ArchiveDirectoryCrawler extends DirectoryCrawler {
                 LOGGER.info("Replacement marker found. Adding it to step dependency. '{}'", relativize(markerFile));
                 step.get().addFileDependency(markerFile.getName(), MISSING).addFileToCopy(newFileToCopy(markerFile));
 
-                if (FIleReaderUtils.readFile(markerFile).isEmpty()) {
+                if (FileReaderUtils.readFile(markerFile).isEmpty()) {
                     writeReplacesItemMarkerFileContend(markerFile);
                 }
             }

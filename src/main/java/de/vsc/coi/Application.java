@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import javax.swing.JOptionPane;
 import javax.xml.bind.JAXBException;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,15 +20,32 @@ import fomod.ModuleConfiguration;
 public class Application {
 
     private static final Logger LOGGER = LogManager.getLogger(Application.class);
+    private final Gui gui = new Gui();
 
     public static void main(final String... args) {
+        final Application application = new Application();
+        application.start(args);
+        application.finalise();
+    }
+
+    public void finalise() {
+        gui.close();
+    }
+
+    public void start(final String... args) {
         try {
+            gui.init();
+            gui.setStatus("Initialising...");
             Config.init(args);
             Workspace.init();
         } catch (final IllegalStateException e) {
             error(e.getMessage());
+            return;
+        } catch (final IOException | URISyntaxException e) {
+            LOGGER.error("While starting GUI.", e);
+            return;
         }
-
+        gui.setStatus("Determine workspace...");
         final File fomod = new File(Workspace.dir(), "fomod");
         if (!fomod.exists()) {
             LOGGER.info("Creating output directory: " + fomod.getPath());
@@ -42,12 +58,13 @@ public class Application {
             error("The CPOIC have to have write access in the workspace!");
             return;
         }
+        gui.setStatus("Creating installer...");
+
         final ModuleConfiguration configuration = new FileCrawler().crawl();
         final ConfigMarshaller marshaller = new ConfigMarshaller(configuration, fomod);
         try {
             LOGGER.info("Marshalling...");
             marshaller.marshal();
-            JOptionPane.showMessageDialog(null, "Process ended successfully!");
         } catch (final JAXBException | IOException e) {
             error("Process ended with Errors! For details view the log file.");
             LOGGER.error("While marshalling:", e);
@@ -70,12 +87,13 @@ public class Application {
                 LOGGER.error("While generating report.", e);
             }
         }
-
+        gui.setStatus("Finished!");
+        gui.displayMessage("Process ended successfully!");
         LOGGER.info("Process ended successfully!");
     }
 
-    public static void error(final String errorMessage) {
-        JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    public void error(final String errorMessage) {
+        gui.displayError(errorMessage);
         LOGGER.error(errorMessage);
     }
 }

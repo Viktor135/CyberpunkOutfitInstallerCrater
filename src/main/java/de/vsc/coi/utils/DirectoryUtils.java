@@ -43,7 +43,7 @@ public class DirectoryUtils {
         final List<String> ignore = new ArrayList<>(config().getDefaultIgnores());
         stream(dir.listFiles((x) -> fileNameIs(x, config().getIgnoreFileName()))).collect(
                 toUniqueOptional(config().getIgnoreFileName(), dir))
-                .ifPresent(ignoreFile -> ignore.addAll(FIleReaderUtils.readFile(ignoreFile)));
+                .ifPresent(ignoreFile -> ignore.addAll(FileReaderUtils.readFile(ignoreFile)));
         return ignore;
     }
 
@@ -59,7 +59,7 @@ public class DirectoryUtils {
         return DirectoryUtils.streamChildren(dir)
                 .filter(x -> fileNameIs(x, "description"))
                 .collect(toUniqueOptional("description.txt", dir))
-                .map(FIleReaderUtils::readFile)
+                .map(FileReaderUtils::readFile)
                 .stream()
                 .flatMap(Collection::stream)
                 .collect(Collectors.joining());
