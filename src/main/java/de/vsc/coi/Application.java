@@ -34,9 +34,9 @@ public class Application {
 
     public void start(final String... args) {
         try {
+            Config.init(args);
             gui.init();
             gui.setStatus("Initialising...");
-            Config.init(args);
             Workspace.init();
         } catch (final IllegalStateException e) {
             error(e.getMessage());
