@@ -20,8 +20,6 @@ import de.vsc.coi.config.Config;
 import de.vsc.coi.config.Workspace;
 import de.vsc.coi.crawlers.FileCrawler;
 import de.vsc.coi.gui.Gui;
-import de.vsc.coi.gui.GuiWrapper;
-import de.vsc.coi.gui.GuiWrapper.Result;
 import de.vsc.coi.marshaller.ConfigMarshaller;
 import de.vsc.coi.marshaller.InfoMarshaller;
 import fomod.ModuleConfiguration;
@@ -32,7 +30,7 @@ public class Application implements Runnable {
 
     public final String[] args;
     private final Queue<Task> tasks;
-    private final GuiWrapper guiWrapper;
+    private final Gui gui;
     public boolean ERROR_STATE = false;
     public boolean AWAIT_COMPLETION = false;
     private ConfigMarshaller configMarshaller;
@@ -41,13 +39,11 @@ public class Application implements Runnable {
     public Application(final String[] args) {
         this.args = args;
         this.tasks = new ArrayDeque<>();
-        this.guiWrapper = GuiWrapper.getInstance();
+        this.gui = new Gui();
     }
 
     public static void main(final String... args) {
-        final Application application = new Application(args);
-        GuiWrapper.createGui();
-        ForkJoinPool.commonPool().execute(application);
+        new Application(args).run();
     }
 
     public void run() {
@@ -81,18 +77,16 @@ public class Application implements Runnable {
     public void initialise() {
         try {
 
-            final Result<Void> result = guiWrapper.invoke(Gui::init);
-            if (result.hadError()) {
-                LOGGER.error("While starting GUI.", result.getException());
-                ERROR_STATE = true;
-                return;
-            }
-            guiWrapper.setGuiStatus("Initialising...");
+            gui.init();
+            gui.setStatus("Initialising...");
             Config.init(args);
             Workspace.init();
         } catch (final IllegalStateException e) {
             LOGGER.error(e);
             error(e.getMessage());
+            ERROR_STATE = true;
+        } catch (final IOException | URISyntaxException e) {
+            LOGGER.error("While starting GUI.", e);
             ERROR_STATE = true;
         }
 
@@ -100,7 +94,7 @@ public class Application implements Runnable {
 
     public void determineWorkspace() {
 
-        guiWrapper.setGuiStatus("Determine workspace...");
+        gui.setStatus("Determine workspace...");
         final File fomodFolder = new File(Workspace.dir(), "fomod");
         if (!fomodFolder.exists()) {
             LOGGER.info("Creating output directory: " + fomodFolder.getPath());
@@ -119,10 +113,10 @@ public class Application implements Runnable {
     }
 
     public void editModInfo() {
-        guiWrapper.setGuiStatus("Pleas fill out the mod info.");
+        gui.setStatus("Pleas fill out the mod info.");
         try {
             final Info modInfo = (Info) infoMarshaller.validate();
-            guiWrapper.call(gui -> gui.showInfoPanel(modInfo)).getValue().onNext(e -> this.proceed());
+            gui.showInfoPanel(modInfo).onNext(e -> this.proceed());
             AWAIT_COMPLETION = true;
         } catch (final JAXBException | SAXException | URISyntaxException e) {
             error("For details view the log file.");
@@ -132,12 +126,13 @@ public class Application implements Runnable {
     }
 
     public void saveModInfo() {
-        guiWrapper.setGuiStatus("Saving mod info.");
-        final Info modInfo = guiWrapper.call(Gui::closeInfoPanel).getValue();
+        final Info modInfo = gui.closeInfoPanel();
 
         if (modInfo == null) { // no changes were made
+            LOGGER.info("No changes in mod info.");
             return;
         }
+        gui.setStatus("Saving mod info.");
         try {
             infoMarshaller.marshal(modInfo);
         } catch (final JAXBException | IOException e) {
@@ -158,7 +153,7 @@ public class Application implements Runnable {
     }
 
     public void createInstaller() {
-        guiWrapper.setGuiStatus("Creating installer...");
+        gui.setStatus("Creating installer...");
         final ModuleConfiguration configuration = new FileCrawler().crawl();
         try {
             LOGGER.info("Marshalling...");
@@ -195,14 +190,14 @@ public class Application implements Runnable {
     }
 
     public void finished() {
-        guiWrapper.invoke(Gui::finished);
+        gui.finished();
         LOGGER.info("Process ended successfully!");
     }
 
     public void error(final String errorMessage) {
         final String finalErrorMessage = "Process ended with errors!\n" + errorMessage;
         LOGGER.error(finalErrorMessage);
-        guiWrapper.invoke(gui -> gui.displayError(finalErrorMessage));
+        gui.displayError(finalErrorMessage);
     }
 
     public interface Task {

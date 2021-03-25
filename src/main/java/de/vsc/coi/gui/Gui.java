@@ -14,9 +14,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -25,25 +22,27 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import de.vsc.coi.Info;
 import de.vsc.coi.utils.FileReaderUtils;
 
 public class Gui extends JFrame {
 
+    private static final Logger LOGGER = LogManager.getLogger(Gui.class);
     public static final Color CYBERPUNK_YELLOW = Color.decode("#f8f102");
 
     private final GridBagConstraints constraints;
     public InfoPanel infoPanel;
     private JLabel statusLabel;
 
-    protected Gui() {
+    public Gui() {
         super("CpOIC");
         this.setLayout(new GridBagLayout());
         constraints = new GridBagConstraints();
     }
-
 
     public static JPanel wrapInPanel(final Component component) {
         final JPanel panel = new JPanel(new GridBagLayout());
@@ -65,7 +64,7 @@ public class Gui extends JFrame {
         this.addRow(statusLabel);
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSize(1218,609);
+        this.setSize(1218, 609);
         this.setResizable(false);
         this.setVisible(true);
     }
@@ -98,6 +97,7 @@ public class Gui extends JFrame {
     }
 
     public void setStatus(final String message) {
+        LOGGER.info("Status: " + message);
         this.statusLabel.setText(message);
     }
 
@@ -115,7 +115,7 @@ public class Gui extends JFrame {
         return images;
     }
 
-    public void addRow(java.awt.Component comp) {
+    public void addRow(final Component comp) {
         constraints.gridy++;
         super.add(comp, constraints);
     }
