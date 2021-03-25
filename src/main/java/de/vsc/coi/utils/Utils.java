@@ -68,7 +68,7 @@ public class Utils {
 
     /**
      * Collects the {@link Stream} in to an {@link Optional}.
-     * In contrast to {@link Stream#findFirst()} it throws an error if more than one element is present.
+     * In contrast to {@link Stream#findFirst()} it throws an hadError if more than one element is present.
      *
      * @param what
      *         which type of item is collected?
@@ -88,7 +88,7 @@ public class Utils {
 
     /**
      * Collects the {@link Stream} in to an {@link Optional}.
-     * In contrast to {@link Stream#findFirst()} it throws an error if more than one element is present.
+     * In contrast to {@link Stream#findFirst()} it throws an hadError if more than one element is present.
      *
      * @param errorMessage
      *         a message to use if more than one elements are present

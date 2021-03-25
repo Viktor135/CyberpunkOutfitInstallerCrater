@@ -1,27 +1,30 @@
 package de.vsc.coi;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import static java.lang.String.join;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
+@EqualsAndHashCode
 @XmlRootElement(name = "fomod")
 public class Info {
-
-    public static final String FILE_NAME = "info.xml";
 
     @XmlElement
     public String Name;
@@ -38,12 +41,12 @@ public class Info {
     @XmlElement(name = "element")
     public List<String> Groups;
 
-    public void marshal(final String path) throws JAXBException, IOException {
-        final Marshaller jaxbMarshaller = JAXBContext.newInstance(Info.class).createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        final File f = new File(path, FILE_NAME);
-        f.createNewFile();
-        jaxbMarshaller.marshal(this, f);
+    public String getGroupsAsString() {
+        return join(", ", this.getGroups());
+    }
+
+    public void setGroupsFromString(final String x) {
+        this.setGroups(Arrays.stream(x.split(",")).map(String::trim).collect(Collectors.toList()));
     }
 
 }
