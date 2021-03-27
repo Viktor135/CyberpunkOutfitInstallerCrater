@@ -41,7 +41,6 @@ public class Config {
     private static Config config;
 
     @PropertyValue("ignores")
-    @DefaultValue("fomod")
     private Set<String> defaultIgnores;
 
     @NotBlank

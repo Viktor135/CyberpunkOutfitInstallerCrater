@@ -1,4 +1,4 @@
-![Image of Yaktocat](./src/main/resources/gui/logo-yellow.png)
+![CpOIC](./src/main/resources/gui/logo-yellow.png)
 
 # CyberpunkOutfitInstallerCrater (CpOIC)
 
@@ -37,7 +37,33 @@ to replace an existing item and this introduces a lot of problems.
 * Normally it is tedious to create such an installer, because it is very repetitive.
 But the CpOIC allows to generate such an installer with in only a few minutes
   
-# How to use?
+# Minimal example
+1. Create the following structure with your mods contend
+``` java
+My fancy mod/                          //Should have the name of your mod
+├── basegame_Short_Skirt_Red.archive
+├── basegame_Short_Skirt_Blue.archive
+├── common.png                        //An image showing all the variants
+├── description.txt                   //some description
+└── Items.Q005_Johnny_Pants           //A file named by the code of the item you will replace.
+```
+2. Make sure you have installed [Java](https://www.java.com/download/help/download_options.html)
+2. Download the ![CpOIC][1]
+2. Execute it and select the created top folder e.g.: `My fancy mod`
+2. Fill out the mod information
+2. Then the ![CpOIC][1] will create the zip file for you
+2. Upload the zip file to [nexusmods](https://www.nexusmods.com) <img src="https://www.nexusmods.com/bootstrap/images/vortex/nmm-logomark.svg" height=15/>
+
+### Zipping Disclaimer:
+The ![CpOIC][1] provides two zipping variants. Firstly a fully integrated java based zipping.
+This variant is always usable, but the archived compression is not that good (sometimes very bad).
+
+Therefore [7-Zip](https://7-zip.org/) will be used if it is locally installed.
+If 7-Zip is not installed in the standard directory (`C:\Program Files\7-Zip\7z.exe`)
+the install directory has to be set manually (See chapter [Config](#advanced-configuration)). 
+
+
+# A more complex example
 ``` java
 My fancy mod/                                   // <1> Should have the name of your mod
 ├── Replace Johnnies pants/                     // <2> One directory per replaced game item 
@@ -70,6 +96,9 @@ My fancy mod/                                   // <1> Should have the name of y
 └── description.txt                             // <6> E.g. "This is my fancy mod! Pleas select whether you like to replace Johnnies pants and / or boots"
 ```
 
+<details>
+  <summary>Detailed description</summary>
+
 * __<1>__  The so called *workspace* which should have the name of the mod.
 * __<2>__  For every game item the mod can replace one should create one Folder in the workspace.
   If only one item can be replaced (e.g. the mod only offers certain variants for Johnnies Pants) this layer can be left out.
@@ -88,3 +117,27 @@ create a file __without__ file ending and name it
   *SelectAtLeastOne*,   *SelectAtMostOne*,   *SelectExactlyOne*,   *SelectAll* or  *SelectAny*.
   This is useful to allow the user, like in the example, to replace Johnnies pants *and*, *or* boots.
   
+</details>
+
+# Reporting
+**You found a bug? Pleas report it!**
+
+
+# Advanced Configuration
+
+View the documented example config:
+[config.properties](./example/config.properties)
+
+Command line arguments:
+
+|    long name    | short | description|
+|-----------------|-------|------------|
+| generateReport  | -r    | Generate a report at the end of execution. For details see the chapter on [Reporting](#reporting) 
+| workspace       | -w    | Simply sets the workspace directory.
+
+For further possible configuration view the source code: [Config.java](./src/main/java/de/vsc/coi/config/Config.java)
+
+
+
+
+[1]:logo-yellow%2062x14.ico
