@@ -65,9 +65,9 @@ public class DirectoryUtils {
                 .collect(Collectors.joining());
     }
 
-    public static File chooseDirectory() {
+    public static File chooseDirectory(final String title) {
         final JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Pleas select the workspace to operate on.");
+        fileChooser.setDialogTitle(title);
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile();

@@ -1,6 +1,7 @@
 package de.vsc.coi;
 
 import static de.vsc.coi.config.Config.config;
+import static de.vsc.coi.utils.DirectoryUtils.chooseDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -196,8 +197,8 @@ public class Application implements Runnable {
         if (gui.getQuestionAnswer()) {
             gui.setStatus("Creating Zip file...");
             try {
-                new Zipper().zip(Workspace.dir(), Workspace.dir().getParentFile(),
-                        Workspace.modName() + " - " + modInfo.getVersion());
+                final File directory = chooseDirectory("Pleas select the output folder for the zip file.");
+                Zipper.zip(Workspace.dir(), directory, Workspace.modName() + " - " + modInfo.getVersion());
             } catch (final ZipException e) {
                 LOGGER.error("Zipping failed.", e);
                 error("Zipping failed.");

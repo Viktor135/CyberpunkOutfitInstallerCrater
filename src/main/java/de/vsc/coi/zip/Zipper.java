@@ -1,5 +1,7 @@
 package de.vsc.coi.zip;
 
+import static lombok.AccessLevel.NONE;
+
 import java.io.File;
 import java.util.List;
 
@@ -7,17 +9,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.vsc.coi.zip.ZipAdapter.ZipException;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = NONE)
 public class Zipper {
 
     private static final Logger LOGGER = LogManager.getLogger(Zipper.class);
     private static final List<ZipAdapter> zipAdapter = List.of(new SevenZipAdapter(), new JavaZipAdapter());
 
-    private String getOs() {
+    private static String getOs() {
         return System.getProperty("os.name").toLowerCase();
     }
 
-    public void zip(final File input, final File outputDir, final String zipName) throws ZipException {
+    public static void zip(final File input, final File outputDir, final String zipName) throws ZipException {
         final String os = getOs();
         final ZipAdapter zipAdapter = Zipper.zipAdapter.stream()
                 .filter(x -> x.operatingSystemMatches(os))

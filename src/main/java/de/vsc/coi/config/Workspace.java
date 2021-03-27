@@ -56,7 +56,7 @@ public class Workspace {
         if (config().getWorkspacePath() != null) {
             workspace = new File(config().getWorkspacePath());
         } else {
-            final File selection = DirectoryUtils.chooseDirectory();
+            final File selection = DirectoryUtils.chooseDirectory("Pleas select the workspace to operate on.");
             if (selection != null) {
                 workspace = selection;
             } else {
