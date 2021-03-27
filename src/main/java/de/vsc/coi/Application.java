@@ -22,6 +22,8 @@ import de.vsc.coi.crawlers.FileCrawler;
 import de.vsc.coi.gui.Gui;
 import de.vsc.coi.marshaller.ConfigMarshaller;
 import de.vsc.coi.marshaller.InfoMarshaller;
+import de.vsc.coi.zip.ZipAdapter.ZipException;
+import de.vsc.coi.zip.Zipper;
 import fomod.ModuleConfiguration;
 
 public class Application implements Runnable {
@@ -30,15 +32,18 @@ public class Application implements Runnable {
 
     public final String[] args;
     private final Queue<Task> tasks;
+    private final Queue<Task> errorTasks;
     private final Gui gui;
-    public boolean ERROR_STATE = false;
-    public boolean AWAIT_COMPLETION = false;
+    private boolean errorState = false;
+    private boolean awaitCompletion = false;
+    private Info modInfo;
     private ConfigMarshaller configMarshaller;
     private InfoMarshaller infoMarshaller;
 
     public Application(final String[] args) {
         this.args = args;
         this.tasks = new ArrayDeque<>();
+        this.errorTasks = new ArrayDeque<>();
         this.gui = new Gui();
     }
 
@@ -57,8 +62,16 @@ public class Application implements Runnable {
                 this::validateModInfo,
                 this::createInstaller,
                 this::validateInstaller,
-                this::generateReport,
+                this::askForZip,
+                // AWAIT_COMPLETION here we wait for user input
+                this::createZip,
                 this::finished));
+
+        errorTasks.addAll(List.of(
+                this::askForReport,
+                this::generateReport,
+                this::finishedWithErrors
+        ));
         //@formatter:on
         proceed();
     }
@@ -68,9 +81,13 @@ public class Application implements Runnable {
     }
 
     private void workOnTasks() {
-        AWAIT_COMPLETION = false;
-        while (!ERROR_STATE && !AWAIT_COMPLETION && !tasks.isEmpty()) {
+        awaitCompletion = false;
+        while (!errorState && !awaitCompletion && !tasks.isEmpty()) {
             tasks.poll().process();
+        }
+        // If an error occurred, we perform the error tasks.
+        while (errorState && !awaitCompletion && !errorTasks.isEmpty()) {
+            errorTasks.poll().process();
         }
     }
 
@@ -84,10 +101,9 @@ public class Application implements Runnable {
         } catch (final IllegalStateException e) {
             LOGGER.error(e);
             error(e.getMessage());
-            ERROR_STATE = true;
         } catch (final IOException | URISyntaxException e) {
             LOGGER.error("While starting GUI.", e);
-            ERROR_STATE = true;
+            errorState = true;
         }
 
     }
@@ -100,13 +116,11 @@ public class Application implements Runnable {
             LOGGER.info("Creating output directory: " + fomodFolder.getPath());
             if (!fomodFolder.mkdirs()) {
                 error("Could not create output directory: " + fomodFolder.getPath());
-                ERROR_STATE = true;
                 return;
             }
         }
         if (!fomodFolder.canWrite()) {
             error("The CPOIC have to have write access in the workspace!");
-            ERROR_STATE = true;
         }
         this.infoMarshaller = new InfoMarshaller(fomodFolder);
         this.configMarshaller = new ConfigMarshaller(fomodFolder);
@@ -115,30 +129,29 @@ public class Application implements Runnable {
     public void editModInfo() {
         gui.setStatus("Pleas fill out the mod info.");
         try {
-            final Info modInfo = (Info) infoMarshaller.validate();
+            modInfo = (Info) infoMarshaller.validate();
             gui.showInfoPanel(modInfo).onNext(e -> this.proceed());
-            AWAIT_COMPLETION = true;
+            awaitCompletion = true;
         } catch (final JAXBException | SAXException | URISyntaxException e) {
             error("For details view the log file.");
             LOGGER.error("While unmarshalling info.xml:", e);
-            ERROR_STATE = true;
         }
     }
 
     public void saveModInfo() {
-        final Info modInfo = gui.closeInfoPanel();
+        final Info newModInfo = gui.closeInfoPanel();
 
-        if (modInfo == null) { // no changes were made
+        if (newModInfo == null) { // no changes were made
             LOGGER.info("No changes in mod info.");
             return;
         }
         gui.setStatus("Saving mod info.");
         try {
-            infoMarshaller.marshal(modInfo);
+            this.modInfo = newModInfo;
+            infoMarshaller.marshal(this.modInfo);
         } catch (final JAXBException | IOException e) {
-            error("\n Could not write info to file.\n For details view the log file.");
+            error("Could not write info to file.<br> For details view the log file.");
             LOGGER.error("While marshalling info.xml:", e);
-            ERROR_STATE = true;
         }
     }
 
@@ -148,7 +161,6 @@ public class Application implements Runnable {
         } catch (final JAXBException | SAXException | URISyntaxException e) {
             error("For details view the log file.");
             LOGGER.error("While validating info.xml:", e);
-            ERROR_STATE = true;
         }
     }
 
@@ -161,7 +173,6 @@ public class Application implements Runnable {
         } catch (final JAXBException | IOException e) {
             error("For details view the log file.");
             LOGGER.error("While marshalling:", e);
-            ERROR_STATE = true;
         }
     }
 
@@ -173,20 +184,27 @@ public class Application implements Runnable {
             error("Validation of the created Installer ended with errors! Most likely, this is an hadError in the CpOIC. "
                     + "Pleas inform the mod author, then the bug will be fixed. For details view the log file.");
             LOGGER.error("While validation:", e);
-            ERROR_STATE = true;
         }
     }
 
-    public void generateReport() {
-        if (config().isGenerateReport()) {
-            try {
-                LOGGER.info("Generating report...");
-                new Reporting().generateReport(configMarshaller.getOutputFile()).writeToFile();
-            } catch (final IOException e) {
-                LOGGER.error("While generating report.", e);
-            }
-        }
+    public void askForZip() {
+        gui.openYesNoQuestion("Do you want to create the mod zip?", e -> this.proceed());
+        this.awaitCompletion = true;
+    }
 
+    public void createZip() {
+        if (gui.getQuestionAnswer()) {
+            gui.setStatus("Creating Zip file...");
+            try {
+                new Zipper().zip(Workspace.dir(), Workspace.dir().getParentFile(),
+                        Workspace.modName() + " - " + modInfo.getVersion());
+            } catch (final ZipException e) {
+                LOGGER.error("Zipping failed.", e);
+                error("Zipping failed.");
+            }
+        } else {
+            LOGGER.info("No zip could be created.");
+        }
     }
 
     public void finished() {
@@ -194,10 +212,36 @@ public class Application implements Runnable {
         LOGGER.info("Process ended successfully!");
     }
 
+    public void askForReport() {
+        if (!config().isGenerateReport()) {
+            gui.openYesNoQuestion("Do you want to create an report?", e -> this.proceed());
+            this.awaitCompletion = true;
+        }
+    }
+
+    public void generateReport() {
+        if (config().isGenerateReport() || gui.getQuestionAnswer()) {
+            try {
+                LOGGER.info("Generating report...");
+                new Reporting().generateReport(configMarshaller.getOutputFile()).writeToFile();
+                LOGGER.info("Report was generated...");
+            } catch (final IOException e) {
+                LOGGER.error("While generating report.", e);
+            }
+        }
+    }
+
+    public void finishedWithErrors() {
+        gui.finished();
+        LOGGER.info("Process ended with errors!");
+    }
+
     public void error(final String errorMessage) {
-        final String finalErrorMessage = "Process ended with errors!\n" + errorMessage;
+        this.errorState = true;
+        this.awaitCompletion = true;
+        final String finalErrorMessage = "<html>Process ended with errors!<br>" + errorMessage + "<html>";
         LOGGER.error(finalErrorMessage);
-        gui.displayError(finalErrorMessage);
+        gui.displayError(finalErrorMessage, e -> this.proceed());
     }
 
     public interface Task {

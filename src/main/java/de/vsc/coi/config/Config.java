@@ -85,6 +85,11 @@ public class Config {
     @CommandLineValue(shortOpt = "w", longOpt = "workspace", hasArg = true)
     private String workspacePath;
 
+    @NotBlank
+    @DefaultValue("C:\\Program Files\\7-Zip\\7z.exe")
+    @PropertyValue("7zip")
+    private String sevenZipPath;
+
     public static Config config() {
         if (config == null) {
             throw new IllegalStateException("The config has to be initialised before usage.");

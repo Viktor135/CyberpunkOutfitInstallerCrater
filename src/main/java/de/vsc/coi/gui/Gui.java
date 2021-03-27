@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,7 +21,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,8 +35,9 @@ public class Gui extends JFrame {
     public static final Color CYBERPUNK_YELLOW = Color.decode("#f8f102");
 
     private final GridBagConstraints constraints;
-    public InfoPanel infoPanel;
+    private InfoPanel infoPanel;
     private JLabel statusLabel;
+    private QuestionPanel questionPanel;
 
     public Gui() {
         super("CpOIC");
@@ -65,12 +66,23 @@ public class Gui extends JFrame {
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(1218, 609);
-        this.setResizable(false);
         this.setVisible(true);
     }
 
-    public void displayError(final String errorMessage) {
-        JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+    public void displayError(final String errorMessage, final ActionListener onButtonPressed) {
+        this.setStatus(errorMessage);
+        this.statusLabel.setForeground(Color.red);
+        final JButton button = new JButton("OK");
+        final JPanel errorPanel = wrapInPanel(button);
+        button.addActionListener(e -> {
+            this.statusLabel.setForeground(Color.black);
+            this.remove(errorPanel);
+            this.revalidate();
+            this.repaint();
+            onButtonPressed.actionPerformed(e);
+        });
+        this.addRow(errorPanel);
+        //JOptionPane.showMessageDialog(this, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
     public InfoPanel showInfoPanel(final Info info) {
@@ -83,10 +95,25 @@ public class Gui extends JFrame {
 
     public Info closeInfoPanel() {
         this.remove(infoPanel.scrollable());
+        this.revalidate();
         this.repaint();
         final Info info = this.infoPanel.toInfoIfChanched();
         this.infoPanel = null;
         return info;
+    }
+
+    public void openYesNoQuestion(final String question, final ActionListener onButtonPress) {
+        this.setStatus(question);
+        questionPanel = new QuestionPanel(onButtonPress);
+        this.addRow(questionPanel);
+    }
+
+    public boolean getQuestionAnswer() {
+        final Boolean answer = questionPanel.getAnswer();
+        this.remove(questionPanel);
+        this.revalidate();
+        this.repaint();
+        return answer;
     }
 
     public void finished() {
@@ -118,5 +145,6 @@ public class Gui extends JFrame {
     public void addRow(final Component comp) {
         constraints.gridy++;
         super.add(comp, constraints);
+        this.revalidate();
     }
 }
