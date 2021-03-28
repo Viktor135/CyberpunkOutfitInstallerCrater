@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+    <moduleName>My fancy mod</moduleName>
+    <moduleImage path="module.jpeg"/>
+    <installSteps order="Explicit">
+        <installStep name="My fancy mod">
+            <optionalFileGroups order="Explicit">
+                <group name="My fancy mod" type="SelectAny">
+                    <plugins order="Explicit">
+                        <plugin name="Replace Johnnies boots">
+                            <description>This is my fancy mod!!!Enjoy the mod installer!!!It was very easy to create!!!</description>
+                            <image path="common.png"/>
+                            <conditionFlags>
+<flag name="Replace Johnnies boots_0">ON</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Replace Johnnies pants">
+                            <description>This is my fancy mod!!!Enjoy the mod installer!!!It was very easy to create!!!</description>
+                            <image path="common.png"/>
+                            <conditionFlags>
+<flag name="Replace Johnnies pants_1">ON</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+        <installStep name="Replace Johnnies boots">
+            <visible operator="And">
+                <dependencies operator="And">
+                    <fileDependency file="Items.Q005_Johnny_Shoes" state="Missing"/>
+                    <flagDependency flag="Replace Johnnies boots_0" value="ON"/>
+                </dependencies>
+            </visible>
+            <optionalFileGroups order="Explicit">
+                <group name="Replace Johnnies boots" type="SelectAtMostOne">
+                    <plugins order="Explicit">
+                        <plugin name="Sneaker Blue">
+                            <description>Pleas select the color you would like to use.</description>
+                            <image path="Replace Johnnies boots\common.png"/>
+                            <files>
+<file source="Replace Johnnies boots\basegame_Sneaker_Blue.archive" destination="\archive\pc\patch\basegame_Sneaker_Blue.archive" priority="0"/>
+<file source="Replace Johnnies boots\Items.Q005_Johnny_Shoes" destination="\archive\pc\patch\Items.Q005_Johnny_Shoes" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Sneaker Green">
+                            <description>Pleas select the color you would like to use.</description>
+                            <image path="Replace Johnnies boots\common.png"/>
+                            <files>
+<file source="Replace Johnnies boots\basegame_Sneaker_Green.archive" destination="\archive\pc\patch\basegame_Sneaker_Green.archive" priority="0"/>
+<file source="Replace Johnnies boots\Items.Q005_Johnny_Shoes" destination="\archive\pc\patch\Items.Q005_Johnny_Shoes" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+        <installStep name="Replace Johnnies pants">
+            <visible operator="And">
+                <dependencies operator="And">
+                    <flagDependency flag="Replace Johnnies pants_1" value="ON"/>
+                </dependencies>
+            </visible>
+            <optionalFileGroups order="Explicit">
+                <group name="Replace Johnnies pants" type="SelectAtMostOne">
+                    <plugins order="Explicit">
+                        <plugin name="Long skirt">
+                            <description>Please select if you prefer long or short skirts</description>
+                            <image path="Replace Johnnies pants\common.png"/>
+                            <conditionFlags>
+<flag name="Long skirt_2">ON</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Short skirt">
+                            <description>Please select if you prefer long or short skirts</description>
+                            <image path="Replace Johnnies pants\common.png"/>
+                            <conditionFlags>
+<flag name="Short skirt_3">ON</flag>
+                            </conditionFlags>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+        <installStep name="Long skirt">
+            <visible operator="And">
+                <dependencies operator="And">
+                    <fileDependency file="Items.Q005_Johnny_Pants" state="Missing"/>
+                    <flagDependency flag="Long skirt_2" value="ON"/>
+                </dependencies>
+            </visible>
+            <optionalFileGroups order="Explicit">
+                <group name="Long skirt" type="SelectAtMostOne">
+                    <plugins order="Explicit">
+                        <plugin name="Long Skirt Blue">
+                            <description>Pleas select the color.</description>
+                            <image path="Replace Johnnies pants\Long skirt\common.png"/>
+                            <files>
+<file source="Replace Johnnies pants\Long skirt\basegame_Long_Skirt_Blue.archive" destination="\archive\pc\patch\basegame_Long_Skirt_Blue.archive" priority="0"/>
+<file source="Replace Johnnies pants\Long skirt\Items.Q005_Johnny_Pants" destination="\archive\pc\patch\Items.Q005_Johnny_Pants" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Long Skirt Red">
+                            <description>Pleas select the color.</description>
+                            <image path="Replace Johnnies pants\Long skirt\common.png"/>
+                            <files>
+<file source="Replace Johnnies pants\Long skirt\basegame_Long_Skirt_Red.archive" destination="\archive\pc\patch\basegame_Long_Skirt_Red.archive" priority="0"/>
+<file source="Replace Johnnies pants\Long skirt\Items.Q005_Johnny_Pants" destination="\archive\pc\patch\Items.Q005_Johnny_Pants" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+        <installStep name="Short skirt">
+            <visible operator="And">
+                <dependencies operator="And">
+                    <fileDependency file="Items.Q005_Johnny_Pants" state="Missing"/>
+                    <flagDependency flag="Short skirt_3" value="ON"/>
+                </dependencies>
+            </visible>
+            <optionalFileGroups order="Explicit">
+                <group name="Short skirt" type="SelectAtMostOne">
+                    <plugins order="Explicit">
+                        <plugin name="Short Skirt Blue">
+                            <description>Pleas select the color.</description>
+                            <image path="Replace Johnnies pants\Short skirt\basegame_Short_Skirt_Blue.png"/>
+                            <files>
+<file source="Replace Johnnies pants\Short skirt\basegame_Short_Skirt_Blue.archive" destination="\archive\pc\patch\basegame_Short_Skirt_Blue.archive" priority="0"/>
+<file source="Replace Johnnies pants\Short skirt\Items.Q005_Johnny_Pants" destination="\archive\pc\patch\Items.Q005_Johnny_Pants" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                        <plugin name="Short Skirt Red">
+                            <description>Pleas select the color.</description>
+                            <image path="Replace Johnnies pants\Short skirt\basegame_Short_Skirt_Red.png"/>
+                            <files>
+<file source="Replace Johnnies pants\Short skirt\basegame_Short_Skirt_Red.archive" destination="\archive\pc\patch\basegame_Short_Skirt_Red.archive" priority="0"/>
+<file source="Replace Johnnies pants\Short skirt\Items.Q005_Johnny_Pants" destination="\archive\pc\patch\Items.Q005_Johnny_Pants" priority="0"/>
+                            </files>
+                            <typeDescriptor>
+<type name="Optional"/>
+                            </typeDescriptor>
+                        </plugin>
+                    </plugins>
+                </group>
+            </optionalFileGroups>
+        </installStep>
+    </installSteps>
+</config>

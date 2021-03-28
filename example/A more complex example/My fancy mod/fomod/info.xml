@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<fomod>
+    <Name>My fancy mod</Name>
+    <Author>Example author</Author>
+    <Version>1.0</Version>
+    <Website></Website>
+    <Description>Some example</Description>
+    <Groups>
+        <element></element>
+    </Groups>
+    <author>Example author</author>
+    <description>Some example</description>
+    <groups></groups>
+    <name>My fancy mod</name>
+    <version>1.0</version>
+    <website></website>
+</fomod>
