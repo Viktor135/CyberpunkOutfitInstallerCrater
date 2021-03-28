@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import javax.swing.JFileChooser;
 
+import de.vsc.coi.config.Workspace;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
@@ -69,6 +70,9 @@ public class DirectoryUtils {
         final JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle(title);
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (Workspace.isInitialised()) {
+            fileChooser.setCurrentDirectory(Workspace.dir());
+        }
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile();
         }

@@ -40,6 +40,7 @@ public class Config {
 
     private static Config config;
 
+    @DefaultValue("fomod")
     @PropertyValue("ignores")
     private Set<String> defaultIgnores;
 

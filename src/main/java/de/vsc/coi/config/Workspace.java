@@ -51,7 +51,7 @@ public class Workspace {
         return name();
     }
 
-    public static void init() {
+    public static void init() throws IllegalStateException{
         final File workspace;
         if (config().getWorkspacePath() != null) {
             workspace = new File(config().getWorkspacePath());

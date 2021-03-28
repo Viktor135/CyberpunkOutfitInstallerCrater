@@ -1,7 +1,6 @@
 package de.vsc.coi.marshaller;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -17,7 +16,7 @@ public class InfoMarshaller extends BaseMarshaller<Info> {
     }
 
     @Override
-    public Object validate() throws JAXBException, SAXException, URISyntaxException {
+    public Object validate() throws JAXBException, SAXException {
         return JAXBContext.newInstance(forClass).createUnmarshaller().unmarshal(outputFile);
     }
 

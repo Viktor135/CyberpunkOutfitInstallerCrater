@@ -107,7 +107,7 @@ class ArchiveDirectoryCrawlerIT {
     @Test
     void the_group_should_have_3_plugins() {
         for (final Plugin plugin : plugins()) {
-            assertThat(plugin.getContent(), hasSize(3));
+            assertThat(plugin.getContent(), hasSize(4));
         }
     }
 

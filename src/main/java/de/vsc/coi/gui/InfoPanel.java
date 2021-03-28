@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -93,7 +94,7 @@ public class InfoPanel extends JPanel {
         final Function<Info, String> getter;
 
         public void setFormValue(final Info info) {
-            field.setText(getter.apply(info).trim());
+            field.setText(Optional.of(info).map(getter).map(String::trim).orElse(""));
         }
 
         public final void saveFormValue(final Info info) {

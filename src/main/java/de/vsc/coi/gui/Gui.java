@@ -1,6 +1,6 @@
 package de.vsc.coi.gui;
 
-import static de.vsc.coi.utils.FileReaderUtils.resourceToUrL;
+import static de.vsc.coi.utils.FileReaderUtils.resourceAsStream;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -22,17 +21,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.LineBorder;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.vsc.coi.Info;
-import de.vsc.coi.utils.FileReaderUtils;
 
 public class Gui extends JFrame {
 
     private static final Logger LOGGER = LogManager.getLogger(Gui.class);
     public static final Color CYBERPUNK_YELLOW = Color.decode("#f8f102");
+    private static final String[] taskbarLogos = new String[] {"logo 16.png", "logo 32.png", "logo 64.png",
+            "logo 128.png"};
 
     private final GridBagConstraints constraints;
     private InfoPanel infoPanel;
@@ -43,6 +44,7 @@ public class Gui extends JFrame {
         super("CpOIC");
         this.setLayout(new GridBagLayout());
         constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
     }
 
     public static JPanel wrapInPanel(final Component component) {
@@ -53,11 +55,12 @@ public class Gui extends JFrame {
     }
 
     public void init() throws URISyntaxException, IOException {
-        final ImageIcon logo = new ImageIcon(ImageIO.read(resourceToUrL("gui/logo.png")));
+        final ImageIcon logo = new ImageIcon(ImageIO.read(resourceAsStream("gui/logo.png")));
 
         this.setIconImages(getLogos());
         final JLabel logoLabel = new JLabel(logo, JLabel.CENTER);
         this.statusLabel = new JLabel("Starting...", JLabel.CENTER);
+        this.statusLabel.setBorder(new LineBorder(Color.blue));
         this.statusLabel.setFont(new Font("Serif", Font.PLAIN, 42));
         this.getContentPane().setBackground(CYBERPUNK_YELLOW);
 
@@ -125,19 +128,17 @@ public class Gui extends JFrame {
 
     public void setStatus(final String message) {
         LOGGER.info("Status: " + message);
-        this.statusLabel.setText(message);
+        this.statusLabel.setText("<html><div style='text-align: center;'>" + message + "</div></html>");
     }
 
     public void close() {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
     }
 
-    private List<Image> getLogos() throws URISyntaxException, IOException {
+    private List<Image> getLogos() throws IOException {
         final List<Image> images = new ArrayList<>();
-        final String[] logos = FileReaderUtils.resourceToFile("gui/taskbar").list();
-        Objects.requireNonNull(logos);
-        for (final String x : logos) {
-            images.add(ImageIO.read(resourceToUrL("gui/taskbar/" + x)));
+        for (final String x : taskbarLogos) {
+            images.add(ImageIO.read(resourceAsStream("gui/taskbar/" + x)));
         }
         return images;
     }

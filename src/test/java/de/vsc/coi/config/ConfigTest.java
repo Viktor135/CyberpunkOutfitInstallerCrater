@@ -28,13 +28,14 @@ class ConfigTest {
     @Test
     void should_contain_the_defaults() {
         final Config expectedConfig = Config.builder()
-                .defaultIgnores(Set.of("fomod","ignore"))
+                .defaultIgnores(Set.of("fomod", "ignore"))
                 .modFileEnding(".archive")
                 .modFileDir("\\archive\\pc\\patch\\")
                 .commonImageName("common")
                 .moduleImageName("module")
                 .flagDependencyValue("ON")
                 .ignoreFileName("ignore")
+                .sevenZipPath("C:\\Program Files\\7-Zip\\7z.exe")
                 .build();
         assertThat(Config.init(), is(expectedConfig));
     }
@@ -42,13 +43,14 @@ class ConfigTest {
     @Test
     void should_correctly_read_the_config_file() {
         final Config expectedConfig = Config.builder()
-                .defaultIgnores(Set.of("ignore1", "some stupid file", "some other", "fomod","ignore"))
+                .defaultIgnores(Set.of("ignore1", "some stupid file", "some other", "fomod", "ignore"))
                 .modFileEnding(".notAnArchive")
                 .modFileDir("/archive/xbox/patch/")
                 .commonImageName("not so common")
                 .moduleImageName("some other module image")
                 .flagDependencyValue("ON")
                 .ignoreFileName("ignore")
+                .sevenZipPath("C:\\Program Files\\7-Zip\\7z.exe")
                 .build();
         final Config actualConfig = ConfigBuilder.on(Config.class).withPropertyLocations("src/test/resources").build();
         assertThat(actualConfig, is(expectedConfig));

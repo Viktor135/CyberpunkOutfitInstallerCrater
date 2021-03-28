@@ -5,11 +5,11 @@ import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Objects;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -19,7 +19,6 @@ import javax.xml.validation.SchemaFactory;
 import org.xml.sax.SAXException;
 
 import de.vsc.coi.builder.ModuleConfigurationBuilder;
-import fomod.ModuleConfiguration;
 
 public abstract class BaseMarshaller<T> {
 
@@ -42,7 +41,7 @@ public abstract class BaseMarshaller<T> {
         jaxbMarshaller.marshal(toMarshall, outputFile);
     }
 
-    public Object validate() throws JAXBException, SAXException, URISyntaxException {
+    public Object validate() throws JAXBException, SAXException {
         //Create Unmarshaller
         final Unmarshaller jaxbUnmarshaller = JAXBContext.newInstance(forClass).createUnmarshaller();
 
@@ -53,12 +52,11 @@ public abstract class BaseMarshaller<T> {
         jaxbUnmarshaller.setSchema(schema);
 
         //Unmarshal xml file
-       return jaxbUnmarshaller.unmarshal(outputFile);
+        return jaxbUnmarshaller.unmarshal(outputFile);
     }
 
-    public File getSchemaAsFile() throws URISyntaxException {
-        return new File(Objects.requireNonNull(ModuleConfigurationBuilder.class.getClassLoader().getResource(schema()))
-                .toURI());
+    public URL getSchemaAsFile() {
+        return Objects.requireNonNull(ModuleConfigurationBuilder.class.getClassLoader().getResource(schema()));
     }
 
     public abstract String schema();

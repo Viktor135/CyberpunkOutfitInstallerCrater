@@ -17,6 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
+import com.tngtech.configbuilder.exception.ConfigBuilderException;
+
 import de.vsc.coi.config.Config;
 import de.vsc.coi.config.Workspace;
 import de.vsc.coi.crawlers.FileCrawler;
@@ -94,13 +96,12 @@ public class Application implements Runnable {
 
     public void initialise() {
         try {
-
             gui.init();
             gui.setStatus("Initialising...");
             Config.init(args);
             Workspace.init();
-        } catch (final IllegalStateException e) {
-            LOGGER.error(e);
+        } catch (final IllegalStateException | ConfigBuilderException e) {
+            LOGGER.error("While Initialising:", e);
             error(e.getMessage());
         } catch (final IOException | URISyntaxException e) {
             LOGGER.error("While starting GUI.", e);
@@ -130,10 +131,14 @@ public class Application implements Runnable {
     public void editModInfo() {
         gui.setStatus("Pleas fill out the mod info.");
         try {
-            modInfo = (Info) infoMarshaller.validate();
+            if (infoMarshaller.getOutputFile().exists()) {
+                modInfo = (Info) infoMarshaller.validate();
+            } else {
+                modInfo = new Info();
+            }
             gui.showInfoPanel(modInfo).onNext(e -> this.proceed());
             awaitCompletion = true;
-        } catch (final JAXBException | SAXException | URISyntaxException e) {
+        } catch (final JAXBException | SAXException e) {
             error("For details view the log file.");
             LOGGER.error("While unmarshalling info.xml:", e);
         }
@@ -159,7 +164,7 @@ public class Application implements Runnable {
     public void validateModInfo() {
         try {
             infoMarshaller.validate();
-        } catch (final JAXBException | SAXException | URISyntaxException e) {
+        } catch (final JAXBException | SAXException e) {
             error("For details view the log file.");
             LOGGER.error("While validating info.xml:", e);
         }
@@ -181,7 +186,7 @@ public class Application implements Runnable {
         try {
             LOGGER.info("Validating...");
             configMarshaller.validate();
-        } catch (final JAXBException | URISyntaxException | SAXException e) {
+        } catch (final JAXBException | SAXException e) {
             error("Validation of the created Installer ended with errors! Most likely, this is an hadError in the CpOIC. "
                     + "Pleas inform the mod author, then the bug will be fixed. For details view the log file.");
             LOGGER.error("While validation:", e);
@@ -240,7 +245,7 @@ public class Application implements Runnable {
     public void error(final String errorMessage) {
         this.errorState = true;
         this.awaitCompletion = true;
-        final String finalErrorMessage = "<html>Process ended with errors!<br>" + errorMessage + "<html>";
+        final String finalErrorMessage = "Process ended with errors!<br>" + errorMessage;
         LOGGER.error(finalErrorMessage);
         gui.displayError(finalErrorMessage, e -> this.proceed());
     }

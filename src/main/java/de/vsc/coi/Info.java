@@ -42,6 +42,9 @@ public class Info {
     public List<String> Groups;
 
     public String getGroupsAsString() {
+        if (this.getGroups() == null) {
+            return "";
+        }
         return join(", ", this.getGroups());
     }
 
