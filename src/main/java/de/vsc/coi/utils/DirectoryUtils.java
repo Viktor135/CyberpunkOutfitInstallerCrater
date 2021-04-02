@@ -63,7 +63,7 @@ public class DirectoryUtils {
                 .map(FileReaderUtils::readFile)
                 .stream()
                 .flatMap(Collection::stream)
-                .collect(Collectors.joining());
+                .collect(Collectors.joining("\r\n"));
     }
 
     public static File chooseDirectory(final String title) {
@@ -71,7 +71,7 @@ public class DirectoryUtils {
         fileChooser.setDialogTitle(title);
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         if (Workspace.isInitialised()) {
-            fileChooser.setCurrentDirectory(Workspace.dir());
+            fileChooser.setCurrentDirectory(Workspace.dir().getParentFile());
         }
         if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             return fileChooser.getSelectedFile();

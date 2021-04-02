@@ -68,8 +68,26 @@ Therefore [7-Zip](https://7-zip.org/) will be used if it is locally installed. I
 directory (`C:\Program Files\7-Zip\7z.exe`)
 the install directory has to be set manually (See chapter [Config](#advanced-configuration)).
 
+# How this tool avoids mod conflicts.
+
+**_This mechanism is not good, but it is the best possibility I am aware of. If you have a better idea, please write
+me!_**
+
+Requirements:
+
+- The conflicting mods must both use the ![CpOIC][1]
+
+Then the user will be warned at deployment
+![](example/A more complex example/pic/error-1.png)
+![](example/A more complex example/pic/error-2.png)
+But simply choosing a solution provided by Vortex does not help.
+The user has th be aware that, if he sees this warning
+he has to uninstall one of the shown mods.
+
 # A more complex example
+
 [Click here for the full example](./example/A more complex example)
+
 ``` java
 My fancy mod/                                   // <1> Should have the name of your mod
 ├── Replace Johnnies pants/                     // <2> One directory per replaced game item 
@@ -103,8 +121,10 @@ My fancy mod/                                   // <1> Should have the name of y
 └── module.jpeg                                 // <9> The main image of the mod. Yes use it here again. 
 ```
 
+## Detailed description
+
 <details>
-  <summary>Detailed description</summary>
+  <summary>Click to expand!</summary>
 
 * __<1>__  The so called *workspace* which should have the name of the mod.
 * __<2>__  For every game item the mod can replace one should create one Folder in the workspace. If only one item can
@@ -126,8 +146,23 @@ My fancy mod/                                   // <1> Should have the name of y
   file __without__ file ending and name it
   *SelectAtLeastOne*,   *SelectAtMostOne*,   *SelectExactlyOne*,   *SelectAll* or  *SelectAny*. This is useful to allow
   the user, like in the example, to replace Johnnies pants *and*, *or* boots.
-* __<9>__ Use here the main image of your mod. 
+* __<9>__ The main image of your mod.
 
+</details>
+
+## And this is the result.
+
+<details>
+  <summary>Click to expand</summary>
+
+Firstly you can decide whether you would like to install a replacer for Johnnies boots and/or pants.
+![](example/A more complex example/pic/0-start.png)
+Then you can decide on the color of the boots.
+![](example/A more complex example/pic/1-boots.png)
+Now you can decide which type of skirt you prefere.
+![](example/A more complex example/pic/2-skirts.png)
+And again, the color can be selected.
+![](example/A more complex example/pic/3-short-skirt.png)
 </details>
 
 # Reporting
@@ -148,7 +183,8 @@ __Please help me to develop the ![CpOIC][1] further!__
 
 Send in your ideas and requirements. I will do my best to integrate them.
 
-# Do you want to contribute 
+# Do you want to contribute
+
 - Do you have some experiences with java?
 - Do you want to develop this software further?
 - Send me a brief application.

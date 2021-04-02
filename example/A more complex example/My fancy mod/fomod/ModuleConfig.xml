@@ -8,7 +8,9 @@
                 <group name="My fancy mod" type="SelectAny">
                     <plugins order="Explicit">
                         <plugin name="Replace Johnnies boots">
-                            <description>This is my fancy mod!!!Enjoy the mod installer!!!It was very easy to create!!!</description>
+                            <description>This is my fancy mod!!!&#13;
+Enjoy the mod installer!!!&#13;
+It was very easy to create!!!</description>
                             <image path="common.png"/>
                             <conditionFlags>
 <flag name="Replace Johnnies boots_0">ON</flag>
@@ -18,7 +20,9 @@
                             </typeDescriptor>
                         </plugin>
                         <plugin name="Replace Johnnies pants">
-                            <description>This is my fancy mod!!!Enjoy the mod installer!!!It was very easy to create!!!</description>
+                            <description>This is my fancy mod!!!&#13;
+Enjoy the mod installer!!!&#13;
+It was very easy to create!!!</description>
                             <image path="common.png"/>
                             <conditionFlags>
 <flag name="Replace Johnnies pants_1">ON</flag>
