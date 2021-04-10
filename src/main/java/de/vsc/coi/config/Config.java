@@ -51,7 +51,7 @@ public class Config {
     private String modFileEnding;
 
     @NotBlank
-    @DefaultValue("\\archive\\pc\\patch\\")
+    @DefaultValue("\\archive\\pc\\mod\\")
     @PropertyValue("modFileDir")
     @CommandLineValue(shortOpt = "mfd", longOpt = "modFileDir", hasArg = true)
     private String modFileDir;

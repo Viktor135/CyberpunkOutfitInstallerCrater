@@ -13,19 +13,19 @@ Features:
 
 Isn't it a hassle...
 
-You see a nice clothing mod for Cyberpunk at [nexusmods.com](https://www.nexusmods.com), it offers replacements for
-Johnnies pants and shoes in different Variants and colors. But which one you should take? The Red short skirt? The blue
-pants? Which shoe model and color? Maybe you chose one, copied the .archive files to the Cyberpunk directory but then
-you think another one would be better. And again, manual copy and paste...
+You see a nice clothing mod for Cyberpunk at [nexusmods.com](nexusmods.com), it offers replacements for
+Johnnies pants and shoes in different Variants and colors. But which one should you take? The Red short skirt? The blue
+pants? Which shoe model and color? Maybe you chose one, copied the .archive files to the Cyberpunk directory. But then
+you might think, that another one would be better. And again, manual copy and paste...
 
-This tool allows the moder to easily create a mod installer. Then the user can download the mod and Vortex will open the
-installer at mod installation. There the user can choose which version he fancy installing. Also, the CpOIC takes care
+This tool allows the modder to easily create a mod installer. Then the user can download the mod and Vortex will open the
+installer at the mod installation. There the user can choose which version he fancy installing. Also, the CpOIC takes care
 about the overwritten game item, so the user is warned, when he installs a mod which will replace the same game item.
 
 # About mod installer
 
-The [Vortex](https://www.nexusmods.com/site/mods/1) mod manager allows the moder to create mod installers
-([also refered to as FOMOD installer](https://wiki.nexusmods.com/index.php/How_to_create_mod_installers))
+The [Vortex](https://www.nexusmods.com/site/mods/1) mod manager allows the modder to create mod installers
+([also reffered to as FOMOD installer](https://wiki.nexusmods.com/index.php/How_to_create_mod_installers))
 which made the mod users live much easier. It essentially adds a menu to the mod installation where one can choose which
 variant of a mod should be installed.
 
