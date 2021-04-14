@@ -51,7 +51,7 @@ My fancy mod/                          //Should have the name of your mod
 └── Items.Q005_Johnny_Pants           //A file named by the code of the item you will replace.
 ```
 
-2. Make sure you have installed [Java](https://www.java.com/download/help/download_options.html)
+2. Make sure you have installed [Java 13 or higher](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html)
 2. Download the ![CpOIC][1]
 2. Execute it and select the created top folder e.g.: `My fancy mod`
 2. Fill out the mod information
