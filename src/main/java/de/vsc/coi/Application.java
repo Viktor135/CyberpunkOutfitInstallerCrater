@@ -1,10 +1,13 @@
 package de.vsc.coi;
 
 import static de.vsc.coi.config.Config.config;
+import static de.vsc.coi.config.ProjectConfig.project;
 import static de.vsc.coi.utils.DirectoryUtils.chooseDirectory;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayDeque;
 import java.util.List;
@@ -28,6 +31,7 @@ import de.vsc.coi.marshaller.InfoMarshaller;
 import de.vsc.coi.zip.ZipAdapter.ZipException;
 import de.vsc.coi.zip.Zipper;
 import fomod.ModuleConfiguration;
+import lombok.SneakyThrows;
 
 public class Application implements Runnable {
 
@@ -58,6 +62,7 @@ public class Application implements Runnable {
         //@formatter:off
         tasks.addAll(List.of(
                 this::initialise,
+                this::checkVersion,
                 this::determineWorkspace,
                 this::editModInfo,
                 // AWAIT_COMPLETION here we wait for user input
@@ -108,6 +113,33 @@ public class Application implements Runnable {
             errorState = true;
         }
 
+    }
+
+    public void checkVersion() {
+        gui.setStatus("Checking CpOIC version...");
+        final String latestVersion = VersionChecker.getLatestVersion();
+        if (latestVersion == null) {
+            return;
+        }
+        LOGGER.info("Version: current: {} | last: {}", project().getVersion(), latestVersion);
+        if (VersionChecker.needsUpdate(latestVersion, project().getVersion())) {
+            gui.openYesNoQuestion("A new version of the CpOIC was released<br/>Do you want to open the download page?",
+                    e -> this.versionUpdateWasRequested());
+            this.awaitCompletion = true;
+        }
+    }
+
+    @SneakyThrows
+    public void versionUpdateWasRequested() {
+        if (gui.getQuestionAnswer()) {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                Desktop.getDesktop().browse(new URI(project().getNexusUrl()));
+                gui.close();
+            } else {
+                gui.showNexusPage();
+                this.awaitCompletion = true;
+            }
+        }
     }
 
     public void determineWorkspace() {
@@ -194,8 +226,7 @@ public class Application implements Runnable {
     }
 
     public void askForZip() {
-        gui.openYesNoQuestion("Do you want to create the mod zip?", e -> this.proceed());
-        this.awaitCompletion = true;
+        openYesNoQuestion("Do you want to create the mod zip?");
     }
 
     public void createZip() {
@@ -220,8 +251,7 @@ public class Application implements Runnable {
 
     public void askForReport() {
         if (!config().isGenerateReport()) {
-            gui.openYesNoQuestion("Do you want to create an report?", e -> this.proceed());
-            this.awaitCompletion = true;
+            openYesNoQuestion("Do you want to create an report?");
         }
     }
 
@@ -248,6 +278,11 @@ public class Application implements Runnable {
         final String finalErrorMessage = "Process ended with errors!<br>" + errorMessage;
         LOGGER.error(finalErrorMessage);
         gui.displayError(finalErrorMessage, e -> this.proceed());
+    }
+
+    public void openYesNoQuestion(final String question) {
+        this.gui.openYesNoQuestion(question, e -> this.proceed());
+        this.awaitCompletion = true;
     }
 
     public interface Task {

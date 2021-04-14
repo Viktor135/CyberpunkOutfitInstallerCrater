@@ -1,5 +1,6 @@
 package de.vsc.coi.gui;
 
+import static de.vsc.coi.config.ProjectConfig.project;
 import static de.vsc.coi.utils.FileReaderUtils.resourceAsStream;
 
 import java.awt.Color;
@@ -8,6 +9,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -147,5 +150,13 @@ public class Gui extends JFrame {
         constraints.gridy++;
         super.add(comp, constraints);
         this.revalidate();
+    }
+
+    public void showNexusPage() {
+        setStatus("Please go to " + project().getNexusUrl() + " to update the CpOIC.<br/>The address was copied to "
+                + "your clipboard.");
+        Toolkit.getDefaultToolkit()
+                .getSystemClipboard()
+                .setContents(new StringSelection(project().getNexusUrl()), null);
     }
 }

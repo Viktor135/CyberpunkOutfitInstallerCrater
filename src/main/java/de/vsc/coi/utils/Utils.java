@@ -1,10 +1,20 @@
 package de.vsc.coi.utils;
 
+import static de.vsc.coi.config.ProjectConfig.project;
+import static java.net.http.HttpClient.Redirect;
+import static java.net.http.HttpClient.newBuilder;
+import static java.net.http.HttpResponse.BodyHandlers.ofString;
 import static lombok.AccessLevel.PRIVATE;
 
 import java.io.File;
-import java.util.Collection;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpRequest;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Optional;
+import java.util.Queue;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
@@ -111,4 +121,5 @@ public class Utils {
             return Optional.empty();
         });
     }
+
 }
