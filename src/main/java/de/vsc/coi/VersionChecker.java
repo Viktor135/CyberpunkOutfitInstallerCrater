@@ -16,15 +16,15 @@ import java.util.Queue;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = PRIVATE)
 public class VersionChecker {
 
-    private static final Logger LOGGER = LogManager.getLogger(VersionChecker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(VersionChecker.class);
 
     public static String getLatestVersion() {
         try {

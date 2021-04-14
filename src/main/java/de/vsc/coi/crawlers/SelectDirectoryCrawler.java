@@ -6,14 +6,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Queue;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.vsc.coi.builder.PluginBuilder;
 
 public class SelectDirectoryCrawler extends DirectoryCrawler {
 
-    private static final Logger LOGGER = LogManager.getLogger(SelectDirectoryCrawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SelectDirectoryCrawler.class);
 
     public SelectDirectoryCrawler() {
         super();

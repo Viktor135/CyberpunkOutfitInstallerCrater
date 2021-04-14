@@ -16,8 +16,8 @@ import java.util.concurrent.ForkJoinPool;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.tngtech.configbuilder.exception.ConfigBuilderException;
@@ -35,7 +35,7 @@ import lombok.SneakyThrows;
 
 public class Application implements Runnable {
 
-    private static final Logger LOGGER = LogManager.getLogger(Application.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
     public final String[] args;
     private final Queue<Task> tasks;

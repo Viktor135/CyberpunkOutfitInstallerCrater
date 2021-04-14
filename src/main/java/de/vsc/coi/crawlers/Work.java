@@ -7,8 +7,8 @@ import java.util.ArrayDeque;
 import java.util.Optional;
 import java.util.Queue;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.vsc.coi.builder.InstallStepBuilder;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 public class Work {
 
-    private static final Logger LOGGER = LogManager.getLogger(Work.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Work.class);
 
     @Getter
     private final File directory;

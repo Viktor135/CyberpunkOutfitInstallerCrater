@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 import de.vsc.coi.builder.GroupBuilder;
 import de.vsc.coi.builder.InstallStepBuilder;

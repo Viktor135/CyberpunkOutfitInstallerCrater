@@ -26,14 +26,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.vsc.coi.Info;
 
 public class Gui extends JFrame {
 
-    private static final Logger LOGGER = LogManager.getLogger(Gui.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Gui.class);
     public static final Color CYBERPUNK_YELLOW = Color.decode("#f8f102");
     private static final String[] taskbarLogos = new String[] {"logo 16.png", "logo 32.png", "logo 64.png",
             "logo 128.png"};

@@ -12,8 +12,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Charsets;
 
@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PRIVATE)
 public class FileReaderUtils {
 
-    private static final Logger LOGGER = LogManager.getLogger(FileReaderUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileReaderUtils.class);
 
     public static List<String> readFile(final File file) {
         try {

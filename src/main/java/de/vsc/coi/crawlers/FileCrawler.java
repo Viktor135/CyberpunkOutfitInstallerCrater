@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.vsc.coi.builder.InstallStepBuilder;
 import de.vsc.coi.builder.ModuleConfigurationBuilder;
@@ -17,7 +17,7 @@ import fomod.ModuleConfiguration;
 
 public class FileCrawler {
 
-    private static final Logger LOGGER = LogManager.getLogger(FileCrawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileCrawler.class);
 
     private final List<DirectoryCrawler> crawlers;
     private final ModuleConfigurationBuilder configurationBuilder;

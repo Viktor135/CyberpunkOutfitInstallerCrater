@@ -7,12 +7,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.concurrent.ForkJoinPool;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class ZipAdapter {
 
-    private static final Logger LOGGER = LogManager.getLogger(ZipAdapter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZipAdapter.class);
 
     public static String enclose(final String in) {
         return "\"" + in + "\"";

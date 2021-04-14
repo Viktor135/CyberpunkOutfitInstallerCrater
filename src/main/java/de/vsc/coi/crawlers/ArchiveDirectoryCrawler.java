@@ -17,8 +17,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.vsc.coi.AutoInit;
 import de.vsc.coi.builder.InstallStepBuilder;
@@ -29,7 +29,7 @@ import de.vsc.coi.utils.FileReaderUtils;
 
 public class ArchiveDirectoryCrawler extends DirectoryCrawler {
 
-    private static final Logger LOGGER = LogManager.getLogger(ArchiveDirectoryCrawler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ArchiveDirectoryCrawler.class);
 
     public static final AutoInit<List<String>> MARKER_FILE_INFO = newAutoInit(() -> {
         final List<String> lines = FileReaderUtils.readLinesOfResource("replacesItemMarkerFileInfo.txt");
