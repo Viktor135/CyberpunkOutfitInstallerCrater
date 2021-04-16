@@ -104,7 +104,6 @@ public class Application implements Runnable {
             gui.init();
             gui.setStatus("Initialising...");
             Config.init(args);
-            Workspace.init();
         } catch (final IllegalStateException | ConfigBuilderException e) {
             LOGGER.error("While Initialising:", e);
             error(e.getMessage());
@@ -116,7 +115,7 @@ public class Application implements Runnable {
     }
 
     public void checkVersion() {
-        gui.setStatus("Checking CpOIC version...");
+        gui.setStatus("Checking for CpOIC updates...");
         final String latestVersion = VersionChecker.getLatestVersion();
         if (latestVersion == null) {
             return;
@@ -143,8 +142,8 @@ public class Application implements Runnable {
     }
 
     public void determineWorkspace() {
-
         gui.setStatus("Determine workspace...");
+        Workspace.init();
         final File fomodFolder = new File(Workspace.dir(), "fomod");
         if (!fomodFolder.exists()) {
             LOGGER.info("Creating output directory: " + fomodFolder.getPath());
